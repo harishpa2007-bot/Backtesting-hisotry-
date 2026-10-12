@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: Calibri, sans-serif; font-size: 11pt; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+  th { background-color: #1f4e78; color: white; padding: 10px; border: 1px solid #b0c4de; text-align: center; font-size: 11pt; }
+  td { padding: 8px 12px; border: 1px solid #d3d3d3; text-align: center; }
+  tr:nth-child(even) { background-color: #f9f9f9; }
+  .profit-bg { background-color: #d4edda !important; color: #155724 !important; font-weight: bold; }
+  .loss-bg { background-color: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
+  .title { font-size: 16pt; font-weight: bold; color: #1f4e78; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="title">📊 Expiry Hero or Zero Strategy Backtest Results</div>
+<table>
+  <thead>
+    <tr>
+      <th>Expiry Date</th>
+      <th>Execution Time</th>
+      <th>Symbol</th>
+      <th>Strike Price</th>
+      <th>Entry Price (₹)</th>
+      <th>Closing Price (₹)</th>
+      <th>Quantity</th>
+      <th>Result</th>
+      <th>PnL Amount (₹)</th>
+      <th>Exit Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2026-08-04</td>
+      <td>2026-08-04 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24400 PE (OTM1)</td>
+      <td>₹4.85</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹312.00)</td>
+      <td class="loss-bg">-₹312.00</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-08-11</td>
+      <td>2026-08-11 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24500 CE (OTM1)</td>
+      <td>₹2.85</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹182.00)</td>
+      <td class="loss-bg">-₹182.00</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-08-11</td>
+      <td>2026-08-11 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24450 PE (ATM)</td>
+      <td>₹4.00</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹256.75)</td>
+      <td class="loss-bg">-₹256.75</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-08-18</td>
+      <td>2026-08-18 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24100 PE (OTM1)</td>
+      <td>₹1.00</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹61.75)</td>
+      <td class="loss-bg">-₹61.75</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-08-25</td>
+      <td>2026-08-25 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24250 PE (ATM)</td>
+      <td>₹1.05</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹65.00)</td>
+      <td class="loss-bg">-₹65.00</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-08-25</td>
+      <td>2026-08-25 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24200 PE (OTM1)</td>
+      <td>₹0.80</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹48.75)</td>
+      <td class="loss-bg">-₹48.75</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-01</td>
+      <td>2026-09-01 15:20:00</td>
+      <td>NIFTY</td>
+      <td>24000 PE (ATM)</td>
+      <td>₹0.90</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹55.25)</td>
+      <td class="loss-bg">-₹55.25</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-01</td>
+      <td>2026-09-01 15:20:00</td>
+      <td>NIFTY</td>
+      <td>23950 PE (OTM1)</td>
+      <td>₹0.55</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹32.50)</td>
+      <td class="loss-bg">-₹32.50</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-08</td>
+      <td>2026-09-08 15:20:00</td>
+      <td>NIFTY</td>
+      <td>23650 CE (ATM)</td>
+      <td>₹1.00</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹61.75)</td>
+      <td class="loss-bg">-₹61.75</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-08</td>
+      <td>2026-09-08 15:20:00</td>
+      <td>NIFTY</td>
+      <td>23700 CE (OTM1)</td>
+      <td>₹0.55</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹32.50)</td>
+      <td class="loss-bg">-₹32.50</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-22</td>
+      <td>2026-09-22 15:20:00</td>
+      <td>NIFTY</td>
+      <td>23300 PE (OTM1)</td>
+      <td>₹0.55</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹32.50)</td>
+      <td class="loss-bg">-₹32.50</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-09-29</td>
+      <td>2026-09-29 15:20:00</td>
+      <td>NIFTY</td>
+      <td>22700 CE (ATM)</td>
+      <td>₹1.15</td>
+      <td>₹16.20</td>
+      <td>65</td>
+      <td class="profit-bg">PROFIT (+₹978.25)</td>
+      <td class="profit-bg">+₹978.25</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+    <tr>
+      <td>2026-10-06</td>
+      <td>2026-10-06 15:20:00</td>
+      <td>NIFTY</td>
+      <td>22700 PE (ATM)</td>
+      <td>₹1.20</td>
+      <td>₹0.05</td>
+      <td>65</td>
+      <td class="loss-bg">LOSS (-₹74.75)</td>
+      <td class="loss-bg">-₹74.75</td>
+      <td>MARKET_CLOSE_TIME</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
