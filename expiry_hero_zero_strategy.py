@@ -156,21 +156,37 @@ class ExpiryHeroZeroStrategy:
         Calculates target strikes based on configuration:
         - ATM: CE ATM (atm_strike), PE ATM (atm_strike)
         - OTM1: CE OTM1 (atm_strike + strike_gap), PE OTM1 (atm_strike - strike_gap)
-        (ITM1 is excluded as per requirement)
+        - ITM1: CE ITM1 (atm_strike - strike_gap), PE ITM1 (atm_strike + strike_gap)
+        - ALL / ATM_OTM_ITM: CE ATM, CE OTM1, CE ITM1, PE ATM, PE OTM1, PE ITM1
         """
         strike_gap = self.config["strike_gap"]
         atm_strike = float(round(spot_price / strike_gap) * strike_gap)
 
         strikes = []
-        if self.strike_mode in ("OTM1_ONLY", "OTM1", "OTM"):
+        mode = self.strike_mode.upper()
+        if mode in ("OTM1_ONLY", "OTM1", "OTM"):
             strikes.extend([
                 {"option_type": "CE", "strike_type": "OTM1", "strike": atm_strike + strike_gap},
                 {"option_type": "PE", "strike_type": "OTM1", "strike": atm_strike - strike_gap},
             ])
-        elif self.strike_mode in ("ATM_ONLY", "ATM"):
+        elif mode in ("ATM_ONLY", "ATM"):
             strikes.extend([
                 {"option_type": "CE", "strike_type": "ATM", "strike": atm_strike},
                 {"option_type": "PE", "strike_type": "ATM", "strike": atm_strike},
+            ])
+        elif mode in ("ITM1_ONLY", "ITM_ONLY", "ITM"):
+            strikes.extend([
+                {"option_type": "CE", "strike_type": "ITM1", "strike": atm_strike - strike_gap},
+                {"option_type": "PE", "strike_type": "ITM1", "strike": atm_strike + strike_gap},
+            ])
+        elif mode in ("ALL", "ATM_OTM_ITM", "ATM_OTM1_ITM1"):
+            strikes.extend([
+                {"option_type": "CE", "strike_type": "ATM", "strike": atm_strike},
+                {"option_type": "CE", "strike_type": "OTM1", "strike": atm_strike + strike_gap},
+                {"option_type": "CE", "strike_type": "ITM1", "strike": atm_strike - strike_gap},
+                {"option_type": "PE", "strike_type": "ATM", "strike": atm_strike},
+                {"option_type": "PE", "strike_type": "OTM1", "strike": atm_strike - strike_gap},
+                {"option_type": "PE", "strike_type": "ITM1", "strike": atm_strike + strike_gap},
             ])
         else:
             # Default "ATM_OTM1": CE ATM, CE OTM1, PE ATM, PE OTM1 (NO ITM1)
@@ -744,6 +760,8 @@ def group_data_by_date_and_timestamp(rows: List[Dict[str, Any]]) -> Dict[str, Li
                 atm_row = offset_map.get("ATM")
                 otm1_ce_row = offset_map.get("ATM+1")  # Strike ATM+50 is Call OTM1
                 otm1_pe_row = offset_map.get("ATM-1")  # Strike ATM-50 is Put OTM1
+                itm1_ce_row = offset_map.get("ATM-1")  # Strike ATM-50 is Call ITM1
+                itm1_pe_row = offset_map.get("ATM+1")  # Strike ATM+50 is Put ITM1
 
                 ce_atm_ltp = float(atm_row.get("CE Close (LTP)", 0.0)) if atm_row else 0.0
                 pe_atm_ltp = float(atm_row.get("PE Close (LTP)", 0.0)) if atm_row else 0.0
@@ -759,10 +777,19 @@ def group_data_by_date_and_timestamp(rows: List[Dict[str, Any]]) -> Dict[str, Li
                 pe_otm1_low = float(otm1_pe_row.get("PE Low", 0.0) or pe_otm1_ltp) if otm1_pe_row else 0.0
                 pe_otm1_high = float(otm1_pe_row.get("PE High", 0.0) or pe_otm1_ltp) if otm1_pe_row else 0.0
 
+                ce_itm1_ltp = float(itm1_ce_row.get("CE Close (LTP)", 0.0)) if itm1_ce_row else 0.0
+                pe_itm1_ltp = float(itm1_pe_row.get("PE Close (LTP)", 0.0)) if itm1_pe_row else 0.0
+                ce_itm1_low = float(itm1_ce_row.get("CE Low", 0.0) or ce_itm1_ltp) if itm1_ce_row else 0.0
+                ce_itm1_high = float(itm1_ce_row.get("CE High", 0.0) or ce_itm1_ltp) if itm1_ce_row else 0.0
+                pe_itm1_low = float(itm1_pe_row.get("PE Low", 0.0) or pe_itm1_ltp) if itm1_pe_row else 0.0
+                pe_itm1_high = float(itm1_pe_row.get("PE High", 0.0) or pe_itm1_ltp) if itm1_pe_row else 0.0
+
                 quotes["CE_ATM"] = {"ltp": ce_atm_ltp, "low": ce_atm_low, "high": ce_atm_high, "strike": atm_strike, "opt_type": "CE", "strike_type": "ATM"}
                 quotes["PE_ATM"] = {"ltp": pe_atm_ltp, "low": pe_atm_low, "high": pe_atm_high, "strike": atm_strike, "opt_type": "PE", "strike_type": "ATM"}
                 quotes["CE_OTM1"] = {"ltp": ce_otm1_ltp, "low": ce_otm1_low, "high": ce_otm1_high, "strike": atm_strike + 50.0, "opt_type": "CE", "strike_type": "OTM1"}
                 quotes["PE_OTM1"] = {"ltp": pe_otm1_ltp, "low": pe_otm1_low, "high": pe_otm1_high, "strike": atm_strike - 50.0, "opt_type": "PE", "strike_type": "OTM1"}
+                quotes["CE_ITM1"] = {"ltp": ce_itm1_ltp, "low": ce_itm1_low, "high": ce_itm1_high, "strike": atm_strike - 50.0, "opt_type": "CE", "strike_type": "ITM1"}
+                quotes["PE_ITM1"] = {"ltp": pe_itm1_ltp, "low": pe_itm1_low, "high": pe_itm1_high, "strike": atm_strike + 50.0, "opt_type": "PE", "strike_type": "ITM1"}
             else:
                 # 1-strike schema: single row per timestamp
                 ce_ltp = float(first_row.get("ATM CE Close (LTP)", 0.0) or 0.0)
@@ -1053,7 +1080,17 @@ def run_backtest(
 
     all_trades: List[Dict[str, Any]] = []
 
-    strikes_desc = "ATM & OTM1 (CE ATM, CE OTM1, PE ATM, PE OTM1 - No ITM1)" if strike_mode.lower() == "atm_otm1" else ("OTM1 ONLY (CE OTM1 & PE OTM1)" if "otm" in strike_mode.lower() else "ATM ONLY")
+    mode_lower = strike_mode.lower()
+    if mode_lower in ("all", "atm_otm_itm", "atm_otm1_itm1"):
+        strikes_desc = "ALL (ATM, OTM1, ITM1: CE ATM/OTM1/ITM1 & PE ATM/OTM1/ITM1)"
+    elif mode_lower in ("itm1_only", "itm_only", "itm"):
+        strikes_desc = "ITM1 ONLY (CE ITM1 & PE ITM1)"
+    elif mode_lower in ("otm1_only", "otm_only", "otm"):
+        strikes_desc = "OTM1 ONLY (CE OTM1 & PE OTM1)"
+    elif mode_lower in ("atm_only", "atm"):
+        strikes_desc = "ATM ONLY (CE ATM & PE ATM)"
+    else:
+        strikes_desc = "ATM & OTM1 (CE ATM, CE OTM1, PE ATM, PE OTM1 - No ITM1)"
 
     time_rule = "Strictly > 15:15 IST (after 3:15 PM)" if strict_after_315 else f">= {trigger_time_str} IST (at or after 3:15 PM, not before)"
     if execution_mode == "limit":
@@ -1203,8 +1240,14 @@ if __name__ == "__main__":
     parser.add_argument("--strict-after-315", action="store_true", help="Enforce strictly after 15:15:00 (> 15:15), ignoring the 15:15:00 bar itself")
     parser.add_argument("--lots", type=int, default=1, help="Number of lots to trade")
     parser.add_argument("--expiry-mode", type=str, default="weekly", choices=["weekly", "monthly", "all"], help="Expiry day selection rule")
-    parser.add_argument("--strike-mode", type=str, default="atm_otm1", choices=["atm_otm1", "otm1_only", "atm_only"], help="Strike selection mode (default: atm_otm1)")
-    parser.add_argument("--otm-only", action="store_true", help="Shortcut to trade OTM1 strikes only (CE OTM1 & PE OTM1, no ATM)")
+    parser.add_argument("--strike-mode", type=str, default="atm_otm1", 
+                        choices=["atm_otm1", "otm1_only", "atm_only", "itm1_only", "all", "atm_otm_itm"], 
+                        help="Strike selection mode (default: atm_otm1)")
+    parser.add_argument("--otm-only", action="store_true", help="Shortcut to trade OTM1 strikes only (CE OTM1 & PE OTM1)")
+    parser.add_argument("--atm-only", action="store_true", help="Shortcut to trade ATM strikes only (CE ATM & PE ATM)")
+    parser.add_argument("--itm-only", action="store_true", help="Shortcut to trade ITM1 strikes only (CE ITM1 & PE ITM1)")
+    parser.add_argument("--all-strikes", action="store_true", help="Shortcut to trade all strikes (ATM, OTM1, ITM1)")
+    parser.add_argument("--compare-all", action="store_true", help="Run comparative backtest across ATM, OTM, ITM, and ALL")
     parser.add_argument("--export-csv", type=str, default="backtest_results.csv", help="Output file path for trade export")
     parser.add_argument("--live", action="store_true", help="Run in live trading broker execution mode")
 
@@ -1228,29 +1271,80 @@ if __name__ == "__main__":
         elif "nifty" in csv_file.lower():
             detected_sym = "NIFTY"
 
-        chosen_strike_mode = "otm1_only" if args.otm_only else args.strike_mode
+        if args.compare_all:
+            configs = [
+                ("ATM ONLY", "atm_only"),
+                ("OTM ONLY", "otm1_only"),
+                ("ITM ONLY", "itm1_only"),
+                ("ATM + OTM (Default)", "atm_otm1"),
+                ("ALL (ATM + OTM + ITM)", "all")
+            ]
+            comp_results = []
+            for label, sm in configs:
+                res = run_backtest(
+                    csv_file_path=csv_file,
+                    symbol=detected_sym,
+                    trigger_time_str=args.trigger_time,
+                    market_close_time_str=args.market_close,
+                    target_entry_price=args.target_entry_price,
+                    min_entry_price=args.min_entry_price,
+                    max_entry_price=args.max_entry_price,
+                    price_tolerance=args.price_tolerance,
+                    target_profit=args.target_profit,
+                    execution_mode=args.mode,
+                    strict_after_315=args.strict_after_315,
+                    lots=args.lots,
+                    expiry_mode=args.expiry_mode,
+                    strike_mode=sm
+                )
+                comp_results.append((label, sm, res))
 
-        results = run_backtest(
-            csv_file_path=csv_file,
-            symbol=detected_sym,
-            trigger_time_str=args.trigger_time,
-            market_close_time_str=args.market_close,
-            target_entry_price=args.target_entry_price,
-            min_entry_price=args.min_entry_price,
-            max_entry_price=args.max_entry_price,
-            price_tolerance=args.price_tolerance,
-            target_profit=args.target_profit,
-            execution_mode=args.mode,
-            strict_after_315=args.strict_after_315,
-            lots=args.lots,
-            expiry_mode=args.expiry_mode,
-            strike_mode=chosen_strike_mode
-        )
+            print("\n" + "=" * 110)
+            print("📊 COMPARATIVE PERFORMANCE SUMMARY: ATM vs OTM vs ITM vs ALL")
+            print("=" * 110)
+            print(f"{'Configuration':<24} | {'Trades':<8} | {'Wins':<6} | {'Losses':<8} | {'Win Rate':<10} | {'Gross Profit':<14} | {'Gross Loss':<12} | {'Net PnL':<14}")
+            print("-" * 110)
+            for label, sm, res in comp_results:
+                m = res["metrics"]
+                pnl_str = f"+₹{m['net_pnl']:,.2f}" if m['net_pnl'] >= 0 else f"-₹{abs(m['net_pnl']):,.2f}"
+                print(
+                    f"{label:<24} | {m['total_trades']:<8} | {m['winning_trades']:<6} | {m['losing_trades']:<8} | "
+                    f"{m['win_rate_pct']:<9.1f}% | ₹{m['gross_profit']:<13,.2f} | ₹{m['gross_loss']:<11,.2f} | {pnl_str:<14}"
+                )
+            print("=" * 110 + "\n")
+        else:
+            if args.otm_only:
+                chosen_strike_mode = "otm1_only"
+            elif args.atm_only:
+                chosen_strike_mode = "atm_only"
+            elif args.itm_only:
+                chosen_strike_mode = "itm1_only"
+            elif args.all_strikes:
+                chosen_strike_mode = "all"
+            else:
+                chosen_strike_mode = args.strike_mode
 
-        print_summary_report(results)
-        if results["trades"]:
-            export_trades_csv(results["trades"], output_file=args.export_csv)
-            xls_path = args.export_csv.replace(".csv", ".xls")
-            export_trades_excel(results["trades"], output_file=xls_path)
+            results = run_backtest(
+                csv_file_path=csv_file,
+                symbol=detected_sym,
+                trigger_time_str=args.trigger_time,
+                market_close_time_str=args.market_close,
+                target_entry_price=args.target_entry_price,
+                min_entry_price=args.min_entry_price,
+                max_entry_price=args.max_entry_price,
+                price_tolerance=args.price_tolerance,
+                target_profit=args.target_profit,
+                execution_mode=args.mode,
+                strict_after_315=args.strict_after_315,
+                lots=args.lots,
+                expiry_mode=args.expiry_mode,
+                strike_mode=chosen_strike_mode
+            )
+
+            print_summary_report(results)
+            if results["trades"]:
+                export_trades_csv(results["trades"], output_file=args.export_csv)
+                xls_path = args.export_csv.replace(".csv", ".xls")
+                export_trades_excel(results["trades"], output_file=xls_path)
 
 
