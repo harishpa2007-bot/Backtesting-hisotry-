@@ -584,7 +584,7 @@ async def fetch_broker_nearest_expiry(broker: Any, user: Any, db: Any, symbol: s
 async def run_live_hero_zero_strategy(
     symbol: str = "NIFTY",
     trigger_time_str: str = "15:15",
-    target_entry_price: float = 5.0,
+    target_entry_price: float = 6.0,
     lots: int = 1,
     ce_strike_mode: str = "ATM",
     pe_strike_mode: str = "ATM"
