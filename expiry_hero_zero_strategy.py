@@ -17,7 +17,7 @@ Conditions:
    - No Stop-loss (SL = None)
 7. Exit Rules:
    - Target Price Meet Time: Closes at ₹20.00 when target is met
-   - Market Closing Time: Square-off at 15:30 IST if target is not met
+   - Market Closing Time: Square-off at 15:40 IST (real market timing: 9:15 to 3:40) if target is not met
 """
 
 import os
@@ -65,7 +65,8 @@ class ExpiryHeroZeroStrategy:
         self,
         symbol: str = "NIFTY",  # "NIFTY" or "SENSEX"
         trigger_time_str: str = "15:15",  # "15:15" or "15:19"
-        market_close_time: Optional[time] = None,  # Dynamic broker market close time
+        market_open_time: Optional[time] = None,  # Real market open time (default: 09:15 IST)
+        market_close_time: Optional[time] = None,  # Real market close square-off time (default: 15:40 IST)
         broker_expiry_date: Optional[date] = None,  # Dynamic broker nearest expiry date
         target_entry_price: float = 6.0,  # Target option entry price strictly exact ₹6
         min_entry_price: Optional[float] = None,  # Minimum entry price floor (e.g. ₹5.90)
@@ -90,8 +91,18 @@ class ExpiryHeroZeroStrategy:
         else:
             self.trigger_time = trigger_time_str
         
-        # Market closing time obtained dynamically from broker
-        self.market_close_time = market_close_time
+        # Real market timing: 9:15 to 3:40 IST
+        if isinstance(market_open_time, str):
+            oh, om = map(int, market_open_time.split(":"))
+            self.market_open_time = time(oh, om, 0)
+        else:
+            self.market_open_time = market_open_time or time(9, 15, 0)
+
+        if isinstance(market_close_time, str):
+            ch, cm = map(int, market_close_time.split(":"))
+            self.market_close_time = time(ch, cm, 0)
+        else:
+            self.market_close_time = market_close_time or time(15, 40, 0)
         
         # Expiry date obtained dynamically from broker API / DB
         self.broker_expiry_date = broker_expiry_date
@@ -131,9 +142,17 @@ class ExpiryHeroZeroStrategy:
         self.is_traded_today = False
         self.active_positions: List[Dict[str, Any]] = []
 
+    def set_market_open_time(self, open_time: time):
+        """Sets or updates the market open time (default: 09:15 IST)."""
+        self.market_open_time = open_time
+
     def set_market_close_time(self, close_time: time):
-        """Sets or updates the market closing time received dynamically from broker API."""
+        """Sets or updates the market closing time received dynamically from broker API (default: 15:40 IST)."""
         self.market_close_time = close_time
+
+    def is_market_timing(self, current_time: time) -> bool:
+        """Validates if current time is within real market timing (9:15 to 3:40 IST)."""
+        return self.market_open_time <= current_time <= self.market_close_time
 
     def set_broker_expiry_date(self, expiry_dt: date):
         """Sets or updates the active expiry date received dynamically from broker API."""
@@ -218,8 +237,13 @@ class ExpiryHeroZeroStrategy:
         current_date = current_datetime.date()
         current_time = current_datetime.time()
 
-        # Update market close time from broker if provided
-        close_time = broker_close_time or self.market_close_time or time(15, 39, 0)
+        # Update market close time from broker if provided (default: 15:40 IST)
+        close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
+
+        # 0. Check Real Market Timing (9:15 to 3:40 IST)
+        if not (self.market_open_time <= current_time <= close_time):
+            logger.debug(f"[{self.symbol}] Current time {current_time} outside real market timing ({self.market_open_time} to {close_time}). Skipping entry.")
+            return None
 
         # 1. Check Expiry Day
         if not self.is_expiry_day(current_date, actual_expiry_date):
@@ -323,25 +347,26 @@ class ExpiryHeroZeroStrategy:
         current_datetime: datetime,
         current_option_prices: Dict[str, Any],
         broker_close_time: Optional[time] = None,
-        candle_quotes: Optional[Dict[str, Dict[str, Any]]] = None
+        candle_quotes: Optional[Dict[str, Dict[str, Any]]] = None,
+        force_market_close: bool = False
     ) -> List[Dict[str, Any]]:
         """
         Evaluates exit conditions for active positions.
         Exit Rules:
         1. Target Hit: If premium reaches target_profit (₹20.00), exit immediately
            with closing_price = target_profit at the exact meet time.
-        2. Market Closing Time: Square-off remaining positions at market close time
-           (e.g. 15:30 IST) at market close LTP or intrinsic settlement value.
+        2. Market Closing Time: Square-off remaining positions at real market close time
+           (15:40 IST / 3:40 PM) at market close LTP or intrinsic settlement value.
         """
         current_time = current_datetime.time()
-        close_time = broker_close_time or self.market_close_time or time(15, 30, 0)
+        close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
         exited_positions = []
 
         if not self.active_positions:
             return exited_positions
 
         remaining_positions = []
-        is_market_close = current_time >= close_time
+        is_market_close = force_market_close or (current_time >= close_time)
 
         for pos in self.active_positions:
             key_exact = f"{pos['strike']}_{pos['option_type']}"
@@ -500,8 +525,8 @@ async def fetch_broker_market_close_time(broker: Any, user: Any, db: Any, symbol
     except Exception as e:
         logger.error(f"Error fetching dynamic market close time from broker API: {e}")
 
-    # Fallback to standard 15:39 IST if broker API status call is offline
-    return time(15, 39, 0)
+    # Fallback to real market close: 15:40 IST (3:40 PM) if broker API status call is offline
+    return time(15, 40, 0)
 
 
 async def fetch_broker_lot_size(broker: Any, db: Any, symbol: str) -> int:
@@ -642,21 +667,28 @@ async def run_live_hero_zero_strategy(
         lots=lots
     )
 
-    logger.info(f"Live Strategy initialized for {symbol}. Listening for market ticks...")
+    logger.info(f"Live Strategy initialized for {symbol}. Real Market Timing: {strategy.market_open_time} to {strategy.market_close_time} IST (9:15 to 3:40). Listening for market ticks...")
 
     while True:
         now_ist = datetime.now(IST)
+        now_time = now_ist.time()
+
+        # 1. Real market timing check: wait if before market open (09:15 IST)
+        if now_time < strategy.market_open_time:
+            logger.debug(f"Current time {now_time} is before market open ({strategy.market_open_time}). Waiting for market to open...")
+            await asyncio.sleep(1)
+            continue
         
-        # Check market closing exit condition
-        if strategy.active_positions and now_ist.time() >= strategy.market_close_time:
+        # 2. Check market closing exit condition at 3:40 PM (15:40 IST)
+        if strategy.active_positions and now_time >= strategy.market_close_time:
             # Query active option quotes for position square-off
             live_exit_quotes = {}
-            strategy.evaluate_exit(now_ist, live_exit_quotes)
+            strategy.evaluate_exit(now_ist, live_exit_quotes, force_market_close=True)
             break
 
-        # Stop loop after market close
-        if now_ist.time() > strategy.market_close_time:
-            logger.info("Market session closed. Strategy execution finished.")
+        # 3. Stop loop after market close (after 15:40 IST)
+        if now_time > strategy.market_close_time:
+            logger.info(f"Market session closed (after {strategy.market_close_time}). Strategy execution finished.")
             break
 
         await asyncio.sleep(1)
@@ -995,6 +1027,7 @@ def print_summary_report(results: Dict[str, Any]):
     print(f"📊 BACKTEST PERFORMANCE SUMMARY ({c['symbol']} EXPIRY HERO-ZERO STRATEGY)")
     print("==========================================================================================")
     print(f"Dataset Total Days    : {c['total_days_evaluated']} Days")
+    print(f"Real Market Timing    : {c.get('market_open_time', '09:15')} to {c.get('market_close_time', '15:40')} IST (9:15 to 3:40)")
     time_label = "Strictly > 15:15 IST (after 3:15 PM)" if c.get("strict_after_315") else f">= {c['trigger_time']} IST (at or after 3:15 PM, not before)"
     if c.get("execution_mode") == "limit":
         price_label = f"Limit Order fill @ exact ₹{c.get('target_entry_price', 5.0):.2f}"
@@ -1039,7 +1072,8 @@ def run_backtest(
     csv_file_path: str,
     symbol: str = "NIFTY",
     trigger_time_str: str = "15:15",
-    market_close_time_str: str = "15:30",
+    market_open_time_str: str = "09:15",
+    market_close_time_str: str = "15:40",
     target_entry_price: float = 6.0,
     min_entry_price: Optional[float] = None,
     max_entry_price: Optional[float] = None,
@@ -1054,18 +1088,22 @@ def run_backtest(
     """
     Executes backtest over historical dataset using ExpiryHeroZeroStrategy.
     Evaluates CE ATM, PE ATM, CE OTM1, PE OTM1 on expiry days (excluding ITM1).
+    Real market timing: 9:15 to 3:40 IST (09:15 to 15:40).
     """
     rows = load_historical_option_chain_data(csv_file_path)
     structured_by_date = group_data_by_date_and_timestamp(rows)
     all_dates = sorted(list(structured_by_date.keys()))
     expiry_dates = get_expiry_days(all_dates, symbol=symbol, mode=expiry_mode)
 
+    open_h, open_m = map(int, market_open_time_str.split(":"))
+    market_open_t = time(open_h, open_m, 0)
     close_h, close_m = map(int, market_close_time_str.split(":"))
     market_close_t = time(close_h, close_m, 0)
 
     strategy = ExpiryHeroZeroStrategy(
         symbol=symbol,
         trigger_time_str=trigger_time_str,
+        market_open_time=market_open_t,
         market_close_time=market_close_t,
         target_entry_price=target_entry_price,
         min_entry_price=min_entry_price,
@@ -1104,6 +1142,7 @@ def run_backtest(
     print(f"• Dataset Source     : {os.path.basename(csv_file_path)}")
     print(f"• Strikes Evaluated  : {strikes_desc}")
     print(f"• Dataset Total Days : {len(all_dates)} ({all_dates[0]} to {all_dates[-1]})")
+    print(f"• Real Market Timing : {market_open_time_str} to {market_close_time_str} IST (9:15 to 3:40)")
     print(f"• Expiry Mode        : {expiry_mode.upper()} ({len(expiry_dates)} expiry days evaluated)")
     print(f"• Trigger Window     : {time_rule}")
     print(f"• Target Profit Price: ₹{target_profit:.2f} (Closing Price = Target @ Meet Time)")
@@ -1122,12 +1161,20 @@ def run_backtest(
         strategy.set_broker_expiry_date(exp_date_obj if is_expiry else None)
 
         day_candles = structured_by_date[current_date_str]
+        num_candles = len(day_candles)
 
-        for candle in day_candles:
+        for candle_idx, candle in enumerate(day_candles):
             dt = candle["datetime"]
+            current_t = dt.time()
+
+            # Ignore data outside real market timing (09:15 to 15:40 IST)
+            if current_t < market_open_t or current_t > market_close_t:
+                continue
+
             spot = candle["spot_price"]
             quotes = candle["quotes"]
             strike_prices = candle["strike_prices"]
+            is_last_candle = (candle_idx == num_candles - 1)
 
             # Build complete exit price mapping from all strikes in the candle
             exit_quotes: Dict[str, float] = {}
@@ -1155,11 +1202,13 @@ def run_backtest(
 
             # 1. Evaluate Exit for active positions on EVERY candle (checks Target meet time or Market close)
             if strategy.active_positions:
+                eval_dt = dt.replace(hour=market_close_t.hour, minute=market_close_t.minute, second=market_close_t.second) if is_last_candle else dt
                 exited_records = strategy.evaluate_exit(
-                    current_datetime=dt,
+                    current_datetime=eval_dt,
                     current_option_prices=exit_quotes,
                     broker_close_time=market_close_t,
-                    candle_quotes=quotes
+                    candle_quotes=quotes,
+                    force_market_close=is_last_candle
                 )
 
                 for t in exited_records:
@@ -1187,8 +1236,35 @@ def run_backtest(
                     }
                     all_trades.append(trade_item)
 
-            # End day processing once market close time reached
-            if dt.time() >= market_close_t:
+            # End day processing once market close time reached or on final candle
+            if dt.time() >= market_close_t or is_last_candle:
+                # Ensure any remaining active positions are squared off at market close
+                if strategy.active_positions:
+                    close_dt = dt.replace(hour=market_close_t.hour, minute=market_close_t.minute, second=market_close_t.second)
+                    force_exits = strategy.evaluate_exit(
+                        current_datetime=close_dt,
+                        current_option_prices=exit_quotes,
+                        broker_close_time=market_close_t,
+                        candle_quotes=quotes,
+                        force_market_close=True
+                    )
+                    for t in force_exits:
+                        pnl_val = t.get("pnl", 0.0)
+                        res_str = f"PROFIT (+₹{pnl_val:,.2f})" if pnl_val > 0 else (f"LOSS (-₹{abs(pnl_val):,.2f})" if pnl_val < 0 else "NEUTRAL (₹0.00)")
+                        all_trades.append({
+                            "expiry_date": current_date_str,
+                            "execution_time": t.get("timestamp", dt.strftime("%Y-%m-%d %H:%M:%S")),
+                            "exit_time": t.get("exit_time", close_dt.strftime("%Y-%m-%d %H:%M:%S")),
+                            "meet_time": t.get("meet_time", close_dt.strftime("%Y-%m-%d %H:%M:%S")),
+                            "symbol": t.get("symbol", symbol),
+                            "strike_price": f"{int(t['strike'])} {t['option_type']} ({t.get('strike_type', 'ATM')})",
+                            "entry_price": t.get("entry_price", 0.0),
+                            "closing_price": t.get("exit_price", 0.0),
+                            "quantity": t.get("quantity", IndexConfig.get(symbol)["lot_size"]),
+                            "result": res_str,
+                            "pnl_amount": pnl_val,
+                            "exit_reason": t.get("exit_reason", "MARKET_CLOSE_TIME")
+                        })
                 break
 
             # 2. Evaluate Entry if no active trade today and within trigger window
@@ -1208,6 +1284,7 @@ def run_backtest(
         "config": {
             "symbol": symbol,
             "trigger_time": trigger_time_str,
+            "market_open_time": market_open_time_str,
             "market_close_time": market_close_time_str,
             "target_entry_price": target_entry_price,
             "min_entry_price": strategy.min_entry_price,
@@ -1230,7 +1307,8 @@ if __name__ == "__main__":
     parser.add_argument("--csv", type=str, default=None, help="Path to historical option chain CSV (defaults to NIFTY_5m_csv.csv)")
     parser.add_argument("--symbol", type=str, default="NIFTY", help="Symbol name (NIFTY / SENSEX)")
     parser.add_argument("--trigger-time", type=str, default="15:15", help="Entry trigger time IST (e.g. 15:15 or 15:19)")
-    parser.add_argument("--market-close", type=str, default="15:30", help="Market close square-off time (e.g. 15:30)")
+    parser.add_argument("--market-open", type=str, default="09:15", help="Real market open time IST (default: 09:15)")
+    parser.add_argument("--market-close", type=str, default="15:40", help="Real market close square-off time IST (default: 15:40)")
     parser.add_argument("--target-entry-price", type=float, default=6.0, help="Target option entry price (strictly ₹6.00)")
     parser.add_argument("--price-tolerance", type=float, default=0.10, help="Tolerance around entry price (default: 0.10, giving ₹5.90 to ₹6.10)")
     parser.add_argument("--min-entry-price", type=float, default=None, help="Explicit minimum entry price filter (e.g. 5.90)")
@@ -1285,6 +1363,7 @@ if __name__ == "__main__":
                     csv_file_path=csv_file,
                     symbol=detected_sym,
                     trigger_time_str=args.trigger_time,
+                    market_open_time_str=args.market_open,
                     market_close_time_str=args.market_close,
                     target_entry_price=args.target_entry_price,
                     min_entry_price=args.min_entry_price,
@@ -1328,6 +1407,7 @@ if __name__ == "__main__":
                 csv_file_path=csv_file,
                 symbol=detected_sym,
                 trigger_time_str=args.trigger_time,
+                market_open_time_str=args.market_open,
                 market_close_time_str=args.market_close,
                 target_entry_price=args.target_entry_price,
                 min_entry_price=args.min_entry_price,

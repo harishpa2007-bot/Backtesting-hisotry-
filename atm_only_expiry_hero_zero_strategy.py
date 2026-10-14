@@ -13,7 +13,7 @@ Conditions:
    - Full Risk (Hero or Zero)
    - No Stop-loss (SL = None)
    - No Target (Target = None)
-7. Exit Rule: Market Closing Time (3:29 PM / 3:30 PM IST auto square-off)
+7. Exit Rule: Market Closing Time (3:40 PM IST auto square-off, Real market timing: 9:15 to 3:40)
 """
 
 import os
@@ -60,7 +60,8 @@ class AtmOnlyExpiryHeroZeroStrategy:
         self,
         symbol: str = "NIFTY",  # "NIFTY" or "SENSEX"
         trigger_time_str: str = "15:15",  # "15:15" or "15:19"
-        market_close_time: Optional[time] = None,  # Dynamic broker market close time
+        market_open_time: Optional[time] = None,  # Real market open time (default: 09:15 IST)
+        market_close_time: Optional[time] = None,  # Dynamic broker market close time (default: 15:40 IST)
         broker_expiry_date: Optional[date] = None,  # Dynamic broker nearest expiry date
         target_entry_price: float = 5.0,  # Target option entry price around ₹5
         min_entry_price: Optional[float] = None,  # Minimum entry price floor (e.g. ₹3.00)
@@ -81,8 +82,9 @@ class AtmOnlyExpiryHeroZeroStrategy:
         else:
             self.trigger_time = trigger_time_str
         
-        # Market closing time obtained dynamically from broker
-        self.market_close_time = market_close_time
+        # Real market timing: 9:15 to 3:40 IST
+        self.market_open_time = market_open_time or time(9, 15, 0)
+        self.market_close_time = market_close_time or time(15, 40, 0)
         
         # Expiry date obtained dynamically from broker API / DB
         self.broker_expiry_date = broker_expiry_date
@@ -268,7 +270,7 @@ class AtmOnlyExpiryHeroZeroStrategy:
         No Stop Loss or Target exit since risk is full (Hero or Zero).
         """
         current_time = current_datetime.time()
-        close_time = broker_close_time or self.market_close_time or time(15, 39, 0)
+        close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
         exited_positions = []
 
         if not self.active_positions:

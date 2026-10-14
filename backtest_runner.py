@@ -157,7 +157,7 @@ class AtmOnlyExpiryHeroZeroStrategy:
         """
         current_date = current_datetime.date()
         current_time = current_datetime.time()
-        close_time = broker_close_time or self.market_close_time or time(15, 30, 0)
+        close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
 
         # 1. Expiry Day check
         if not self.is_expiry_day(current_date, actual_expiry_date):
@@ -248,7 +248,7 @@ class AtmOnlyExpiryHeroZeroStrategy:
         2. Market Close: Auto square-off at market close time if target not met.
         """
         current_time = current_datetime.time()
-        close_time = broker_close_time or self.market_close_time or time(15, 30, 0)
+        close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
         exited_positions = []
 
         if not self.active_positions:
@@ -447,7 +447,7 @@ def run_backtest(
     csv_file_path: str,
     symbol: str = "NIFTY",
     trigger_time_str: str = "15:15",
-    market_close_time_str: str = "15:30",
+    market_close_time_str: str = "15:40",
     target_entry_price: float = 5.0,
     min_entry_price: Optional[float] = None,
     max_entry_price: Optional[float] = None,
@@ -801,7 +801,7 @@ if __name__ == "__main__":
     parser.add_argument("--csv", type=str, default=default_csv, help="Path to historical option CSV file")
     parser.add_argument("--symbol", type=str, default="NIFTY", help="Symbol name (NIFTY / SENSEX)")
     parser.add_argument("--trigger-time", type=str, default="15:15", help="Entry trigger time IST (e.g. 15:15 or 15:19)")
-    parser.add_argument("--market-close", type=str, default="15:30", help="Market close square-off time (e.g. 15:30)")
+    parser.add_argument("--market-close", type=str, default="15:40", help="Market close square-off time (e.g. 15:40)")
     parser.add_argument("--target-entry-price", type=float, default=5.0, help="Target option entry price around ₹5 (default: 5.0)")
     parser.add_argument("--price-tolerance", type=float, default=2.0, help="Price window tolerance around target price (default: 2.0 -> ₹3 to ₹7)")
     parser.add_argument("--min-entry-price", type=float, default=None, help="Explicit minimum entry price filter (e.g. 3.0 or 3.5)")
