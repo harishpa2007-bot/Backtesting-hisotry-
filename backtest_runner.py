@@ -61,7 +61,7 @@ class AtmOnlyExpiryHeroZeroStrategy:
         min_entry_price: Optional[float] = None,  # Minimum entry price floor (e.g. ₹3.00)
         max_entry_price: Optional[float] = None,  # Maximum entry price cap (e.g. ₹7.00 or ₹5.00)
         price_tolerance: float = 2.0,  # Price window (target_entry_price ± tolerance)
-        target_profit: float = 20.0,  # Target profit price (default: ₹20.00)
+        target_profit: Optional[float] = None,  # No target profit by default (hold till market ends)
         ce_strike_mode: str = "ATM",
         pe_strike_mode: str = "ATM",
         lots: int = 1,
@@ -106,9 +106,9 @@ class AtmOnlyExpiryHeroZeroStrategy:
         self.lots = lots
         self.quantity = lots * self.config["lot_size"]
         
-        # Risk & Targets - No SL, Target = 20.0
+        # Risk & Targets - No SL, No Target (Hero or Zero: hold till market ends)
         self.stop_loss = None
-        self.target_profit = float(target_profit) if target_profit is not None else 20.0
+        self.target_profit = float(target_profit) if target_profit is not None else None
         self.full_risk_mode = full_risk_mode
         
         # Daily state tracking
@@ -244,8 +244,8 @@ class AtmOnlyExpiryHeroZeroStrategy:
     ) -> List[Dict[str, Any]]:
         """
         Evaluates exit conditions for active positions:
-        1. Target Profit Hit: Exit immediately at target_profit (₹20.00) at meet time.
-        2. Market Close: Auto square-off at market close time if target not met.
+        1. Target Profit Hit: Exit immediately at target_profit at meet time (if target_profit specified).
+        2. Market Close: Auto square-off all positions when market ends (15:40 IST).
         """
         current_time = current_datetime.time()
         close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
@@ -452,7 +452,7 @@ def run_backtest(
     min_entry_price: Optional[float] = None,
     max_entry_price: Optional[float] = None,
     price_tolerance: float = 2.0,
-    target_profit: float = 20.0,
+    target_profit: Optional[float] = None,
     lots: int = 1,
     expiry_mode: str = "weekly",
     strategy_type: str = "atm_only"
@@ -764,7 +764,10 @@ def print_summary_report(results: Dict[str, Any]):
     print(f"Total Evaluated Days  : {c['total_days_evaluated']} Days")
     print(f"Expiry Days Filtered  : {c['expiry_days_evaluated']} Days ({c['expiry_mode'].upper()})")
     print(f"Trigger Time          : {c['trigger_time']} IST")
-    print(f"Target Profit Price   : ₹{c.get('target_profit', 20.0):.2f} (Closing Price = Target @ Meet Time)")
+    target_prof = c.get('target_profit')
+    target_prof_str = f"₹{target_prof:.2f} (Closing Price = Target @ Meet Time)" if target_prof is not None else "None (No Target Price - Full Risk Hero or Zero)"
+    print(f"Target Profit Price   : {target_prof_str}")
+    print(f"Market Close Exit     : {c.get('market_close_time', '15:40')} IST (Square-off all positions when market ends)")
     print(f"Entry Price Window    : ₹{c.get('min_entry_price', 0):.2f} to ₹{c.get('max_entry_price', 0):.2f} (Target ~₹{c.get('target_entry_price', 5.0):.2f})")
     print("------------------------------------------------------------------------------------------")
     print(f"Total Trades Placed   : {m['total_trades']}")
@@ -806,7 +809,7 @@ if __name__ == "__main__":
     parser.add_argument("--price-tolerance", type=float, default=2.0, help="Price window tolerance around target price (default: 2.0 -> ₹3 to ₹7)")
     parser.add_argument("--min-entry-price", type=float, default=None, help="Explicit minimum entry price filter (e.g. 3.0 or 3.5)")
     parser.add_argument("--max-entry-price", type=float, default=None, help="Explicit maximum entry price cap (e.g. 7.0 or 5.0)")
-    parser.add_argument("--target-profit", type=float, default=20.0, help="Target profit price for exit (default: ₹20.00)")
+    parser.add_argument("--target-profit", type=float, default=None, help="Target profit price for exit (default: None - hold till market ends)")
     parser.add_argument("--lots", type=int, default=1, help="Number of lots to trade")
     parser.add_argument("--expiry-mode", type=str, default="weekly", choices=["weekly", "monthly", "all"], help="Expiry day selection rule")
     parser.add_argument("--export-csv", type=str, default="backtest_results_atm_only.csv", help="Output file path for trade export")

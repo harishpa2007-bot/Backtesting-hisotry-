@@ -3,21 +3,22 @@ Expiry Hero or Zero Strategy for NIFTY and SENSEX
 =================================================
 
 Conditions:
-1. Underlying Index: NIFTY and SENSEX support
-2. Expiry Filter: Triggers ONLY on Expiry day for the respective index
-3. Execution Time: Triggers after 3:15 PM or 3:19 PM IST
-4. Entry Target Price: Option Premium strictly exact ₹6.00 (± ₹0.10)
-5. Strike Selection: 
+1. Real Market Timing: 9:15 AM to 3:40 PM IST (09:15 to 15:40)
+2. Underlying Index: NIFTY and SENSEX support
+3. Expiry Filter: Triggers ONLY on Expiry day for the respective index
+4. Execution Time: Triggers after 3:15 PM or 3:19 PM IST
+5. Entry Target Price: Option Premium strictly exact ₹6.00 (± ₹0.10)
+6. Strike Selection: 
    - ATM (At-The-Money Call & Put)
    - CE OTM1 (1 Strike Out-Of-The-Money Call: ATM + 1 Strike Gap)
    - PE OTM1 (1 Strike Out-Of-The-Money Put: ATM - 1 Strike Gap)
    - (ITM1 strikes excluded)
-6. Risk Management & Profit Target:
-   - Target Profit: ₹20.00 (Position closes at ₹20.00 at exact Target Meet Time)
+7. Risk Management:
+   - Full Risk (Hero or Zero)
    - No Stop-loss (SL = None)
-7. Exit Rules:
-   - Target Price Meet Time: Closes at ₹20.00 when target is met
-   - Market Closing Time: Square-off at 15:40 IST (real market timing: 9:15 to 3:40) if target is not met
+   - No Target Price (Positions held till market ends)
+8. Exit Rules:
+   - Market Ends / Closing Time: Square-off all positions at 15:40 IST (real market timing: 9:15 to 3:40)
 """
 
 import os
@@ -72,7 +73,7 @@ class ExpiryHeroZeroStrategy:
         min_entry_price: Optional[float] = None,  # Minimum entry price floor (e.g. ₹5.90)
         max_entry_price: Optional[float] = None,  # Maximum entry price cap (e.g. ₹6.10 or ₹6.00)
         price_tolerance: float = 0.10,  # Strict tolerance: ± ₹0.10 (₹5.90 to ₹6.10)
-        target_profit: float = 20.0,  # Target profit price (default: ₹20.00)
+        target_profit: Optional[float] = None,  # No target profit by default (hold till market ends)
         execution_mode: str = "limit",  # "limit" (exact ₹5 limit fill) or "close" (checks close LTP in window)
         strict_after_315: bool = False,  # If True, strictly after 15:15 (> 15:15:00). If False, >= 15:15:00
         ce_strike_mode: str = "ATM",  # "ATM" strike selection
@@ -133,9 +134,9 @@ class ExpiryHeroZeroStrategy:
         self.lots = lots
         self.quantity = lots * self.config["lot_size"]
         
-        # Risk & Targets - No SL, Target = ₹20.00
+        # Risk & Targets - Full Risk (Hero or Zero): No SL, No Target (Hold till market ends)
         self.stop_loss = None
-        self.target_profit = float(target_profit) if target_profit is not None else 20.0
+        self.target_profit = float(target_profit) if target_profit is not None else None
         self.full_risk_mode = full_risk_mode
         
         # State tracking
@@ -352,11 +353,9 @@ class ExpiryHeroZeroStrategy:
     ) -> List[Dict[str, Any]]:
         """
         Evaluates exit conditions for active positions.
-        Exit Rules:
-        1. Target Hit: If premium reaches target_profit (₹20.00), exit immediately
-           with closing_price = target_profit at the exact meet time.
-        2. Market Closing Time: Square-off remaining positions at real market close time
-           (15:40 IST / 3:40 PM) at market close LTP or intrinsic settlement value.
+        Exit Rule:
+        - Market Ends / Closing Time: Square-off all positions when market ends
+          (15:40 IST / 3:40 PM) at market close LTP or intrinsic settlement value.
         """
         current_time = current_datetime.time()
         close_time = broker_close_time or self.market_close_time or time(15, 40, 0)
@@ -1035,8 +1034,10 @@ def print_summary_report(results: Dict[str, Any]):
         price_label = f"₹{c.get('min_entry_price', 0):.2f} to ₹{c.get('max_entry_price', 0):.2f} (Exact ₹{c.get('target_entry_price', 5.0):.2f} ± ₹{c.get('price_tolerance', 0.10):.2f})"
 
     print(f"Trigger Time Window   : {time_label}")
-    print(f"Target Profit Price   : ₹{c.get('target_profit', 20.0):.2f} (Closing Price = Target @ Meet Time)")
-    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off if target not met)")
+    target_prof = c.get('target_profit')
+    target_prof_str = f"₹{target_prof:.2f} (Closing Price = Target @ Meet Time)" if target_prof is not None else "None (No Target Price - Full Risk Hero or Zero)"
+    print(f"Target Profit Price   : {target_prof_str}")
+    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off all positions when market ends)")
     print(f"Entry Price Rule      : {price_label}")
     print(f"Lot Size & Quantity   : {c['lots']} Lot(s) ({c['lots'] * IndexConfig.get(c['symbol'])['lot_size']} Qty)")
     print("------------------------------------------------------------------------------------------")
@@ -1078,7 +1079,7 @@ def run_backtest(
     min_entry_price: Optional[float] = None,
     max_entry_price: Optional[float] = None,
     price_tolerance: float = 0.10,
-    target_profit: float = 20.0,
+    target_profit: Optional[float] = None,
     execution_mode: str = "limit",
     strict_after_315: bool = False,
     lots: int = 1,
@@ -1145,8 +1146,9 @@ def run_backtest(
     print(f"• Real Market Timing : {market_open_time_str} to {market_close_time_str} IST (9:15 to 3:40)")
     print(f"• Expiry Mode        : {expiry_mode.upper()} ({len(expiry_dates)} expiry days evaluated)")
     print(f"• Trigger Window     : {time_rule}")
-    print(f"• Target Profit Price: ₹{target_profit:.2f} (Closing Price = Target @ Meet Time)")
-    print(f"• Market Close Exit  : {market_close_time_str} IST (Square-off if target not met)")
+    target_banner_str = f"₹{target_profit:.2f} (Closing Price = Target @ Meet Time)" if target_profit is not None else "None (Hold till market ends)"
+    print(f"• Target Profit Price: {target_banner_str}")
+    print(f"• Market Close Exit  : {market_close_time_str} IST (Square-off all positions when market ends)")
     print(f"• Entry Price Rule   : {exec_rule}")
     print(f"• Quantity Traded    : {lots} Lot(s) ({lots * IndexConfig.get(symbol)['lot_size']} Qty)")
     print(f"==========================================================================================\n")
@@ -1313,7 +1315,7 @@ if __name__ == "__main__":
     parser.add_argument("--price-tolerance", type=float, default=0.10, help="Tolerance around entry price (default: 0.10, giving ₹5.90 to ₹6.10)")
     parser.add_argument("--min-entry-price", type=float, default=None, help="Explicit minimum entry price filter (e.g. 5.90)")
     parser.add_argument("--max-entry-price", type=float, default=None, help="Explicit maximum entry price cap (e.g. 6.10 or 6.00)")
-    parser.add_argument("--target-profit", type=float, default=20.0, help="Target profit price for position exit (default: ₹20.00)")
+    parser.add_argument("--target-profit", type=float, default=None, help="Target profit price for position exit (default: None - hold till market ends)")
     parser.add_argument("--mode", type=str, default="limit", choices=["limit", "close"], help="Execution mode: 'limit' (exact ₹6 limit fill, default) or 'close' (candle close in range)")
     parser.add_argument("--strict-after-315", action="store_true", help="Enforce strictly after 15:15:00 (> 15:15), ignoring the 15:15:00 bar itself")
     parser.add_argument("--lots", type=int, default=1, help="Number of lots to trade")
