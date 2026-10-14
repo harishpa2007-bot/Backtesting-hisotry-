@@ -1323,11 +1323,11 @@ if __name__ == "__main__":
     parser.add_argument("--strike-mode", type=str, default="atm_otm1", 
                         choices=["atm_otm1", "otm1_only", "atm_only", "itm1_only", "all", "atm_otm_itm"], 
                         help="Strike selection mode (default: atm_otm1)")
-    parser.add_argument("--otm-only", action="store_true", help="Shortcut to trade OTM1 strikes only (CE OTM1 & PE OTM1)")
-    parser.add_argument("--atm-only", action="store_true", help="Shortcut to trade ATM strikes only (CE ATM & PE ATM)")
-    parser.add_argument("--itm-only", action="store_true", help="Shortcut to trade ITM1 strikes only (CE ITM1 & PE ITM1)")
-    parser.add_argument("--all-strikes", action="store_true", help="Shortcut to trade all strikes (ATM, OTM1, ITM1)")
-    parser.add_argument("--compare-all", action="store_true", help="Run comparative backtest across ATM, OTM, ITM, and ALL")
+    parser.add_argument("--otm-only", "--OTM-only", "--otm", dest="otm_only", action="store_true", help="Shortcut to trade OTM1 strikes only (CE OTM1 & PE OTM1)")
+    parser.add_argument("--atm-only", "--ATM-only", "--atm", dest="atm_only", action="store_true", help="Shortcut to trade ATM strikes only (CE ATM & PE ATM)")
+    parser.add_argument("--itm-only", "--ITM-only", "--itm", dest="itm_only", action="store_true", help="Shortcut to trade ITM1 strikes only (CE ITM1 & PE ITM1)")
+    parser.add_argument("--all-strikes", "--ALL-strikes", dest="all_strikes", action="store_true", help="Shortcut to trade all strikes (ATM, OTM1, ITM1)")
+    parser.add_argument("--compare-all", "--COMPARE-ALL", dest="compare_all", action="store_true", help="Run comparative backtest across ATM, OTM, ITM, and ALL")
     parser.add_argument("--export-csv", type=str, default="backtest_results.csv", help="Output file path for trade export")
     parser.add_argument("--live", action="store_true", help="Run in live trading broker execution mode")
 
