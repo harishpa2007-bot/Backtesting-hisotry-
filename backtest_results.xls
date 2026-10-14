@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<div class="title">📊 Expiry Hero or Zero Strategy 1:1 Target Evaluation</div>
+<div class="title">📊 Expiry Hero or Zero Strategy 1:3 Target Evaluation</div>
 <table>
   <thead>
     <tr>
@@ -24,10 +24,10 @@
       <th>Symbol</th>
       <th>Strike Price</th>
       <th>Entry Price (₹)</th>
-      <th>Target 1:1 (₹)</th>
+      <th>Target 1:3 (₹)</th>
       <th>Exit Price (₹)</th>
       <th>Quantity</th>
-      <th>1:1 Attained (True/False)</th>
+      <th>1:3 Attained (True/False)</th>
       <th>Exit Reason</th>
     </tr>
   </thead>
@@ -39,7 +39,7 @@
       <td>NIFTY</td>
       <td>24400 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -52,7 +52,7 @@
       <td>NIFTY</td>
       <td>24500 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -65,7 +65,7 @@
       <td>NIFTY</td>
       <td>24200 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -74,15 +74,15 @@
     <tr>
       <td>2026-08-25</td>
       <td>2026-08-25 15:15:00</td>
-      <td>2026-08-25 15:20:00</td>
+      <td>2026-08-25 15:21:00</td>
       <td>NIFTY</td>
       <td>24300 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹24.00</td>
       <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td>TARGET_24_REACHED</td>
     </tr>
     <tr>
       <td>2026-08-25</td>
@@ -91,7 +91,7 @@
       <td>NIFTY</td>
       <td>24200 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -104,7 +104,7 @@
       <td>NIFTY</td>
       <td>23950 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -113,15 +113,15 @@
     <tr>
       <td>2026-09-08</td>
       <td>2026-09-08 15:15:00</td>
-      <td>2026-09-08 15:16:00</td>
+      <td>2026-09-08 15:40:00</td>
       <td>NIFTY</td>
       <td>23700 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹0.05</td>
       <td>65</td>
-      <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td class="false-bg">False</td>
+      <td>MARKET_CLOSE_TIME</td>
     </tr>
     <tr>
       <td>2026-09-15</td>
@@ -130,11 +130,11 @@
       <td>NIFTY</td>
       <td>23100 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹24.00</td>
       <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td>TARGET_24_REACHED</td>
     </tr>
     <tr>
       <td>2026-09-15</td>
@@ -143,7 +143,7 @@
       <td>NIFTY</td>
       <td>23200 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -152,15 +152,15 @@
     <tr>
       <td>2026-09-22</td>
       <td>2026-09-22 15:16:00</td>
-      <td>2026-09-22 15:20:00</td>
+      <td>2026-09-22 15:40:00</td>
       <td>NIFTY</td>
       <td>23300 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹0.05</td>
       <td>65</td>
-      <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td class="false-bg">False</td>
+      <td>MARKET_CLOSE_TIME</td>
     </tr>
     <tr>
       <td>2026-09-29</td>
@@ -169,7 +169,7 @@
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>
@@ -178,28 +178,28 @@
     <tr>
       <td>2026-10-06</td>
       <td>2026-10-06 15:19:00</td>
-      <td>2026-10-06 15:20:00</td>
+      <td>2026-10-06 15:29:00</td>
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹24.00</td>
       <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td>TARGET_24_REACHED</td>
     </tr>
     <tr>
       <td>2026-10-13</td>
       <td>2026-10-13 15:15:00</td>
-      <td>2026-10-13 15:20:00</td>
+      <td>2026-10-13 15:40:00</td>
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
+      <td>₹0.05</td>
       <td>65</td>
-      <td class="true-bg">True</td>
-      <td>TARGET_12_REACHED</td>
+      <td class="false-bg">False</td>
+      <td>MARKET_CLOSE_TIME</td>
     </tr>
     <tr>
       <td>2026-10-13</td>
@@ -208,7 +208,7 @@
       <td>NIFTY</td>
       <td>22650 PE (OTM1)</td>
       <td>₹6.00</td>
-      <td>₹12.00</td>
+      <td>₹24.00</td>
       <td>₹0.05</td>
       <td>65</td>
       <td class="false-bg">False</td>

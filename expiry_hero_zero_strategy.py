@@ -8,17 +8,17 @@ Conditions:
 3. Expiry Filter: Triggers ONLY on Expiry day for the respective index
 4. Execution Time: Triggers after 3:15 PM or 3:19 PM IST
 5. Entry Target Price: Option Premium strictly exact ₹6.00 (± ₹0.10)
-6. Target Rule: 1:1 Target (Target Price = ₹12.00 on Entry ₹6.00)
+6. Target Rule: 1:3 Target (Target Price = ₹24.00 on Entry ₹6.00)
 7. Strike Selection:
    - Separate results for ATM, OTM (OTM1), and ITM (ITM1)
 8. Output Format:
    - Do NOT show net profit or loss
    - Show ONLY True or False
-   - If entry attains 1:1 in any strike -> True
-   - If entry did not attain 1:1 in any strike -> False
+   - If entry attains 1:3 in any strike -> True
+   - If entry did not attain 1:3 in any strike -> False
 9. Exit Rules:
-   - 1:1 Target Hit: Reaches ₹12.00 -> True
-   - Market Ends (15:40 IST): Square-off if 1:1 not met -> False
+   - 1:3 Target Hit: Reaches ₹24.00 -> True
+   - Market Ends (15:40 IST): Square-off if 1:3 not met -> False
 """
 
 import os
@@ -73,7 +73,7 @@ class ExpiryHeroZeroStrategy:
         min_entry_price: Optional[float] = None,  # Minimum entry price floor (e.g. ₹5.90)
         max_entry_price: Optional[float] = None,  # Maximum entry price cap (e.g. ₹6.10 or ₹6.00)
         price_tolerance: float = 0.10,  # Strict tolerance: ± ₹0.10 (₹5.90 to ₹6.10)
-        target_profit: Optional[float] = 12.0,  # 1:1 Target profit (₹12.00 on entry ₹6.00)
+        target_profit: Optional[float] = 24.0,  # 1:3 Target profit (₹24.00 on entry ₹6.00)
         execution_mode: str = "limit",  # "limit" (exact ₹5 limit fill) or "close" (checks close LTP in window)
         strict_after_315: bool = False,  # If True, strictly after 15:15 (> 15:15:00). If False, >= 15:15:00
         ce_strike_mode: str = "ATM",  # "ATM" strike selection
@@ -134,9 +134,9 @@ class ExpiryHeroZeroStrategy:
         self.lots = lots
         self.quantity = lots * self.config["lot_size"]
         
-        # Risk & Targets - 1:1 Target (Entry ₹6 -> Target ₹12)
+        # Risk & Targets - 1:3 Target (Entry ₹6 -> Target ₹24)
         self.stop_loss = None
-        self.target_profit = float(target_profit) if target_profit is not None else (self.target_entry_price * 2.0)
+        self.target_profit = float(target_profit) if target_profit is not None else (self.target_entry_price * 4.0)
         self.full_risk_mode = full_risk_mode
         
         # State tracking
@@ -431,7 +431,7 @@ class ExpiryHeroZeroStrategy:
             meet_time_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
             if is_target_met:
-                # Target price met! Closing price equals strictly target price (₹20.00)
+                # Target price met! Closing price equals strictly target price (₹24.00)
                 exit_price = float(self.target_profit)
                 exit_reason = f"TARGET_{int(self.target_profit)}_REACHED"
                 pnl = (exit_price - pos['entry_price']) * pos['quantity']
@@ -882,8 +882,8 @@ def get_expiry_days(date_keys: List[str], symbol: str = "NIFTY", mode: str = "we
         raise ValueError(f"Unknown expiry mode: {mode}")
 
 
-def calculate_metrics(trades: List[Dict[str, Any]], target_profit: Optional[float] = 12.0) -> Dict[str, Any]:
-    """Calculates 1:1 Target performance statistics (True / False evaluation without PnL)."""
+def calculate_metrics(trades: List[Dict[str, Any]], target_profit: Optional[float] = 24.0) -> Dict[str, Any]:
+    """Calculates 1:3 Target performance statistics (True / False evaluation without PnL)."""
     total_trades = len(trades)
     if total_trades == 0:
         return {
@@ -892,7 +892,7 @@ def calculate_metrics(trades: List[Dict[str, Any]], target_profit: Optional[floa
             "win_rate_pct": 0.0, "true_pct": 0.0, "result": "False"
         }
 
-    target_thresh = target_profit if target_profit is not None else 12.0
+    target_thresh = target_profit if target_profit is not None else 24.0
     true_trades = []
     false_trades = []
 
@@ -960,7 +960,7 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
 </style>
 </head>
 <body>
-<div class="title">📊 Expiry Hero or Zero Strategy 1:1 Target Evaluation</div>
+<div class="title">📊 Expiry Hero or Zero Strategy 1:3 Target Evaluation</div>
 <table>
   <thead>
     <tr>
@@ -970,10 +970,10 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
       <th>Symbol</th>
       <th>Strike Price</th>
       <th>Entry Price (₹)</th>
-      <th>Target 1:1 (₹)</th>
+      <th>Target 1:3 (₹)</th>
       <th>Exit Price (₹)</th>
       <th>Quantity</th>
-      <th>1:1 Attained (True/False)</th>
+      <th>1:3 Attained (True/False)</th>
       <th>Exit Reason</th>
     </tr>
   </thead>
@@ -984,7 +984,7 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
         res_str = "True" if is_true else "False"
         row_cls = "true-bg" if is_true else "false-bg"
         meet_t = t.get("meet_time") or t.get("exit_time", "")
-        tgt_val = t.get("target_price", 12.0) or 12.0
+        tgt_val = t.get("target_price", 24.0) or 24.0
 
         html_content += f"""    <tr>
       <td>{t['expiry_date']}</td>
@@ -1018,7 +1018,7 @@ def print_summary_report(results: Dict[str, Any]):
     trades = results["trades"]
 
     print("\n==========================================================================================")
-    print(f"📊 1:1 TARGET EVALUATION SUMMARY ({c['symbol']} EXPIRY HERO-ZERO)")
+    print(f"📊 1:3 TARGET EVALUATION SUMMARY ({c['symbol']} EXPIRY HERO-ZERO)")
     print("==========================================================================================")
     print(f"Dataset Total Days    : {c['total_days_evaluated']} Days ({c.get('expiry_days_evaluated', 0)} Expiry Days Evaluated)")
     print(f"Real Market Timing    : {c.get('market_open_time', '09:15')} to {c.get('market_close_time', '15:40')} IST (9:15 to 3:40)")
@@ -1028,23 +1028,23 @@ def print_summary_report(results: Dict[str, Any]):
     else:
         price_label = f"₹{c.get('min_entry_price', 0):.2f} to ₹{c.get('max_entry_price', 0):.2f} (Exact ₹{c.get('target_entry_price', 6.0):.2f} ± ₹{c.get('price_tolerance', 0.10):.2f})"
 
-    target_val = c.get('target_profit', 12.0) or 12.0
+    target_val = c.get('target_profit', 24.0) or 24.0
     print(f"Trigger Time Window   : {time_label}")
-    print(f"Target Condition      : 1:1 Target (Entry ₹{c.get('target_entry_price', 6.0):.2f} -> Target Price ₹{target_val:.2f})")
-    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off if 1:1 target not met)")
+    print(f"Target Condition      : 1:3 Target (Entry ₹{c.get('target_entry_price', 6.0):.2f} -> Target Price ₹{target_val:.2f})")
+    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off if 1:3 target not met)")
     print(f"Entry Price Rule      : {price_label}")
     print(f"Lot Size & Quantity   : {c['lots']} Lot(s) ({c['lots'] * IndexConfig.get(c['symbol'])['lot_size']} Qty)")
     print("------------------------------------------------------------------------------------------")
     print(f"Total Trades Placed   : {m['total_trades']}")
-    print(f"1:1 Target Attained   : {m.get('true_count', 0)} (True)")
-    print(f"1:1 Not Attained      : {m.get('false_count', 0)} (False)")
-    print(f"1:1 Attainment Rate   : {m.get('win_rate_pct', 0.0)}%")
+    print(f"1:3 Target Attained   : {m.get('true_count', 0)} (True)")
+    print(f"1:3 Not Attained      : {m.get('false_count', 0)} (False)")
+    print(f"1:3 Attainment Rate   : {m.get('win_rate_pct', 0.0)}%")
     print(f"Overall Result        : {'True' if m.get('true_count', 0) > 0 else 'False'}")
     print("==========================================================================================\n")
 
     if trades:
         print("Detailed Trade Breakdown:")
-        print(f"{'Expiry Date':<12} | {'Entry Time':<20} | {'Meet / Exit Time':<20} | {'Strike Price':<22} | {'Entry (₹)':<10} | {'Target 1:1':<12} | {'Exit (₹)':<10} | {'1:1 Attained (True/False)':<26}")
+        print(f"{'Expiry Date':<12} | {'Entry Time':<20} | {'Meet / Exit Time':<20} | {'Strike Price':<22} | {'Entry (₹)':<10} | {'Target 1:3':<12} | {'Exit (₹)':<10} | {'1:3 Attained (True/False)':<26}")
         print("-" * 135)
         for t in trades:
             entry_t = t.get("execution_time", "")
@@ -1069,7 +1069,7 @@ def run_backtest(
     min_entry_price: Optional[float] = None,
     max_entry_price: Optional[float] = None,
     price_tolerance: float = 0.10,
-    target_profit: Optional[float] = 12.0,
+    target_profit: Optional[float] = 24.0,
     execution_mode: str = "limit",
     strict_after_315: bool = False,
     lots: int = 1,
@@ -1136,9 +1136,9 @@ def run_backtest(
     print(f"• Real Market Timing : {market_open_time_str} to {market_close_time_str} IST (9:15 to 3:40)")
     print(f"• Expiry Mode        : {expiry_mode.upper()} ({len(expiry_dates)} expiry days evaluated)")
     print(f"• Trigger Window     : {time_rule}")
-    target_val = target_profit if target_profit is not None else 12.0
-    print(f"• Target Condition   : 1:1 Target (₹{target_val:.2f} Target Price on ₹{target_entry_price:.2f} Entry)")
-    print(f"• Market Close Exit  : {market_close_time_str} IST (Square-off if 1:1 target not met)")
+    target_val = target_profit if target_profit is not None else 24.0
+    print(f"• Target Condition   : 1:3 Target (₹{target_val:.2f} Target Price on ₹{target_entry_price:.2f} Entry)")
+    print(f"• Market Close Exit  : {market_close_time_str} IST (Square-off if 1:3 target not met)")
     print(f"• Entry Price Rule   : {exec_rule}")
     print(f"• Quantity Traded    : {lots} Lot(s) ({lots * IndexConfig.get(symbol)['lot_size']} Qty)")
     print(f"==========================================================================================\n")
@@ -1204,7 +1204,7 @@ def run_backtest(
                 )
 
                 for t in exited_records:
-                    is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 12.0))
+                    is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 24.0))
                     res_str = "True" if is_target_attained else "False"
                     trade_item = {
                         "expiry_date": current_date_str,
@@ -1214,7 +1214,7 @@ def run_backtest(
                         "symbol": t.get("symbol", symbol),
                         "strike_price": f"{int(t['strike'])} {t['option_type']} ({t.get('strike_type', 'ATM')})",
                         "entry_price": t.get("entry_price", 0.0),
-                        "target_price": strategy.target_profit or 12.0,
+                        "target_price": strategy.target_profit or 24.0,
                         "closing_price": t.get("exit_price", 0.0),
                         "quantity": t.get("quantity", IndexConfig.get(symbol)["lot_size"]),
                         "result": res_str,
@@ -1236,7 +1236,7 @@ def run_backtest(
                         force_market_close=True
                     )
                     for t in force_exits:
-                        is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 12.0))
+                        is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 24.0))
                         res_str = "True" if is_target_attained else "False"
                         all_trades.append({
                             "expiry_date": current_date_str,
@@ -1246,7 +1246,7 @@ def run_backtest(
                             "symbol": t.get("symbol", symbol),
                             "strike_price": f"{int(t['strike'])} {t['option_type']} ({t.get('strike_type', 'ATM')})",
                             "entry_price": t.get("entry_price", 0.0),
-                            "target_price": strategy.target_profit or 12.0,
+                            "target_price": strategy.target_profit or 24.0,
                             "closing_price": t.get("exit_price", 0.0),
                             "quantity": t.get("quantity", IndexConfig.get(symbol)["lot_size"]),
                             "result": res_str,
@@ -1301,7 +1301,7 @@ if __name__ == "__main__":
     parser.add_argument("--price-tolerance", type=float, default=0.10, help="Tolerance around entry price (default: 0.10, giving ₹5.90 to ₹6.10)")
     parser.add_argument("--min-entry-price", type=float, default=None, help="Explicit minimum entry price filter (e.g. 5.90)")
     parser.add_argument("--max-entry-price", type=float, default=None, help="Explicit maximum entry price cap (e.g. 6.10 or 6.00)")
-    parser.add_argument("--target-profit", type=float, default=12.0, help="Target profit price for position exit (default: ₹12.00 for 1:1 target)")
+    parser.add_argument("--target-profit", type=float, default=24.0, help="Target profit price for position exit (default: ₹24.00 for 1:3 target)")
     parser.add_argument("--mode", type=str, default="limit", choices=["limit", "close"], help="Execution mode: 'limit' (exact ₹6 limit fill, default) or 'close' (candle close in range)")
     parser.add_argument("--strict-after-315", action="store_true", help="Enforce strictly after 15:15:00 (> 15:15), ignoring the 15:15:00 bar itself")
     parser.add_argument("--lots", type=int, default=1, help="Number of lots to trade")
@@ -1368,9 +1368,9 @@ if __name__ == "__main__":
                 results_by_sm[sm] = res
 
             print("\n" + "=" * 105)
-            print("📊 COMPARATIVE 1:1 TARGET SUMMARY: ATM vs OTM vs ITM vs ALL")
+            print("📊 COMPARATIVE 1:3 TARGET SUMMARY: ATM vs OTM vs ITM vs ALL")
             print("=" * 105)
-            print(f"{'Configuration':<24} | {'Trades':<8} | {'1:1 Attained (True)':<20} | {'Not Attained (False)':<20} | {'1:1 Rate':<10} | {'Result':<8}")
+            print(f"{'Configuration':<24} | {'Trades':<8} | {'1:3 Attained (True)':<20} | {'Not Attained (False)':<20} | {'1:3 Rate':<10} | {'Result':<8}")
             print("-" * 105)
             for label, sm, res in comp_results:
                 m = res["metrics"]
@@ -1394,7 +1394,7 @@ if __name__ == "__main__":
             sorted_exp_dates = sorted(list(set(all_exp_dates + calendar_expiries)))
 
             print("=" * 85)
-            print("📅 EXPIRY DATE-BY-DATE 1:1 TARGET ATTAINMENT (True / False)")
+            print("📅 EXPIRY DATE-BY-DATE 1:3 TARGET ATTAINMENT (True / False)")
             print("=" * 85)
             print(f"{'Expiry Date':<12} | {'ATM':<12} | {'OTM':<12} | {'ITM':<12} | {'ANY Strike':<14}")
             print("-" * 85)
