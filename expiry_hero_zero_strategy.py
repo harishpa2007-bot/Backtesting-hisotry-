@@ -698,6 +698,7 @@ async def run_live_hero_zero_strategy(
 def find_default_csv_file() -> str:
     """Finds the default historical CSV file in the current directory."""
     candidates = [
+        "Historical_Option_Chain_NIFTY_1m_2026-10-13_to_2026-10-13.csv",
         "NIFTY_5m_csv.csv",
         "nifty_5m_csv.csv",
         "Historical_Option_Chain_NIFTY_5m_2026-08-01_to_2026-09-29 (5).csv",
@@ -706,24 +707,28 @@ def find_default_csv_file() -> str:
     for c in candidates:
         if os.path.exists(c):
             return c
-    return "NIFTY_5m_csv.csv"
+    return "Historical_Option_Chain_NIFTY_1m_2026-10-13_to_2026-10-13.csv" if os.path.exists("Historical_Option_Chain_NIFTY_1m_2026-10-13_to_2026-10-13.csv") else "NIFTY_5m_csv.csv"
 
 
 def load_historical_option_chain_data(csv_file_path: str) -> List[Dict[str, Any]]:
     """Loads historical option chain CSV and handles case-insensitivity or alternate paths."""
     if not os.path.exists(csv_file_path):
-        # Check lower/upper case variations in directory
-        dir_name = os.path.dirname(csv_file_path) or "."
-        base_name = os.path.basename(csv_file_path).lower()
-        matched = None
-        for f in os.listdir(dir_name):
-            if f.lower() == base_name:
-                matched = os.path.join(dir_name, f)
-                break
-        if matched and os.path.exists(matched):
-            csv_file_path = matched
+        if os.path.exists(csv_file_path + ".csv"):
+            csv_file_path = csv_file_path + ".csv"
         else:
-            raise FileNotFoundError(f"CSV file not found at: {csv_file_path}")
+            # Check lower/upper case variations or partial match in directory
+            dir_name = os.path.dirname(csv_file_path) or "."
+            base_name = os.path.basename(csv_file_path).lower()
+            matched = None
+            for f in sorted(os.listdir(dir_name)):
+                f_lower = f.lower()
+                if f_lower == base_name or f_lower == base_name + ".csv" or (len(base_name) > 3 and base_name in f_lower and f_lower.endswith(".csv")):
+                    matched = os.path.join(dir_name, f)
+                    break
+            if matched and os.path.exists(matched):
+                csv_file_path = matched
+            else:
+                raise FileNotFoundError(f"CSV file not found at: {csv_file_path}")
 
     rows = []
     with open(csv_file_path, mode="r", encoding="utf-8-sig") as f:
