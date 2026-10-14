@@ -312,6 +312,7 @@ class ExpiryHeroZeroStrategy:
                 fill_price = ltp
 
             if is_price_matched:
+                high_quote = float(quote.get("high", fill_price) or fill_price)
                 orders_to_place.append({
                     "symbol": self.symbol,
                     "option_type": opt_type,
@@ -324,7 +325,8 @@ class ExpiryHeroZeroStrategy:
                     "risk": "FULL_RISK (Hero or Zero)",
                     "stop_loss": self.stop_loss,
                     "target": self.target_profit,
-                    "timestamp": current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                    "timestamp": current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                    "max_high": high_quote
                 })
                 logger.info(
                     f"🟢 ENTRY SIGNAL DETECTED: Buy {self.symbol} {strike} {opt_type} ({strike_type}) @ ₹{fill_price:.2f} "
@@ -404,6 +406,9 @@ class ExpiryHeroZeroStrategy:
             ltp = float(quote_data.get("ltp", pos['entry_price']) or 0.0)
             high_price = float(quote_data.get("high", ltp) or ltp)
 
+            # Update running max high reached since entry
+            pos["max_high"] = max(pos.get("max_high", pos["entry_price"]), high_price)
+
             # 2. Check if Target Profit is met
             is_target_met = False
             if self.target_profit is not None and self.target_profit > 0:
@@ -442,7 +447,8 @@ class ExpiryHeroZeroStrategy:
                     "exit_time": meet_time_str,
                     "meet_time": meet_time_str,
                     "exit_reason": exit_reason,
-                    "pnl": round(pnl, 2)
+                    "pnl": round(pnl, 2),
+                    "max_high": pos["max_high"]
                 }
                 exited_positions.append(exit_record)
                 logger.info(
@@ -461,7 +467,8 @@ class ExpiryHeroZeroStrategy:
                     "exit_time": meet_time_str,
                     "meet_time": meet_time_str,
                     "exit_reason": exit_reason,
-                    "pnl": round(pnl, 2)
+                    "pnl": round(pnl, 2),
+                    "max_high": pos["max_high"]
                 }
                 exited_positions.append(exit_record)
                 logger.info(
@@ -883,51 +890,61 @@ def get_expiry_days(date_keys: List[str], symbol: str = "NIFTY", mode: str = "we
 
 
 def calculate_metrics(trades: List[Dict[str, Any]], target_profit: Optional[float] = 24.0) -> Dict[str, Any]:
-    """Calculates 1:3 Target performance statistics (True / False evaluation without PnL)."""
+    """Calculates multi-ratio target performance statistics (1:1, 1:2, 1:3 True / False evaluation)."""
     total_trades = len(trades)
     if total_trades == 0:
         return {
-            "total_trades": 0, "true_count": 0, "false_count": 0,
-            "winning_trades": 0, "losing_trades": 0,
-            "win_rate_pct": 0.0, "true_pct": 0.0, "result": "False"
+            "total_trades": 0,
+            "t1_true": 0, "t1_false": 0, "t1_pct": 0.0,
+            "t2_true": 0, "t2_false": 0, "t2_pct": 0.0,
+            "t3_true": 0, "t3_false": 0, "t3_pct": 0.0,
+            "attained_true": 0, "attained_false": 0, "attained_pct": 0.0,
+            "true_count": 0, "false_count": 0, "win_rate_pct": 0.0, "result": "False"
         }
 
-    target_thresh = target_profit if target_profit is not None else 24.0
-    true_trades = []
-    false_trades = []
+    t1_true = sum(1 for t in trades if str(t.get("target 1:1", "")).lower() == "true")
+    t2_true = sum(1 for t in trades if str(t.get("target 1:2", "")).lower() == "true")
+    t3_true = sum(1 for t in trades if str(t.get("target1:3", "")).lower() == "true")
+    attained_true = sum(1 for t in trades if str(t.get("Attained (True/False)", "")).lower() == "true")
 
-    for t in trades:
-        is_true = t.get("is_target_attained", False) or "TARGET" in str(t.get("exit_reason", "")) or (t.get("closing_price", 0) >= target_thresh)
-        if is_true:
-            true_trades.append(t)
-        else:
-            false_trades.append(t)
-
-    true_count = len(true_trades)
-    false_count = len(false_trades)
-    win_rate = (true_count / total_trades) * 100.0 if total_trades > 0 else 0.0
+    t1_pct = round((t1_true / total_trades) * 100.0, 1)
+    t2_pct = round((t2_true / total_trades) * 100.0, 1)
+    t3_pct = round((t3_true / total_trades) * 100.0, 1)
+    attained_pct = round((attained_true / total_trades) * 100.0, 1)
 
     return {
         "total_trades": total_trades,
-        "true_count": true_count,
-        "false_count": false_count,
-        "winning_trades": true_count,
-        "losing_trades": false_count,
-        "win_rate_pct": round(win_rate, 1),
-        "true_pct": round(win_rate, 1),
-        "result": "True" if true_count > 0 else "False"
+        "t1_true": t1_true,
+        "t1_false": total_trades - t1_true,
+        "t1_pct": t1_pct,
+        "t2_true": t2_true,
+        "t2_false": total_trades - t2_true,
+        "t2_pct": t2_pct,
+        "t3_true": t3_true,
+        "t3_false": total_trades - t3_true,
+        "t3_pct": t3_pct,
+        "attained_true": attained_true,
+        "attained_false": total_trades - attained_true,
+        "attained_pct": attained_pct,
+        "true_count": t3_true,
+        "false_count": total_trades - t3_true,
+        "winning_trades": attained_true,
+        "losing_trades": total_trades - attained_true,
+        "win_rate_pct": attained_pct,
+        "result": "True" if attained_true > 0 else "False"
     }
 
 
 def export_trades_csv(trades: List[Dict[str, Any]], output_file: str = "backtest_results.csv"):
-    """Exports trades array to a CSV file without showing profit/loss."""
+    """Exports trades to a CSV file matching the exact WPS spreadsheet layout (no PnL)."""
     if not trades:
         print("⚠️ No trades to export.")
         return
 
     fieldnames = [
-        "expiry_date", "execution_time", "meet_time", "symbol", "strike_price",
-        "entry_price", "target_price", "closing_price", "quantity", "result", "exit_reason"
+        "epiry date", "entry price", "symbol", "strike price",
+        "target 1:1", "target 1:2", "target1:3", "Attained (True/False)",
+        "MARKET_CLOSE_Price", "After entry  High"
     ]
 
     with open(output_file, mode="w", newline="", encoding="utf-8") as f:
@@ -940,7 +957,7 @@ def export_trades_csv(trades: List[Dict[str, Any]], output_file: str = "backtest
 
 
 def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backtest_results.xls"):
-    """Exports trades to a styled XLS file showing True (green) and False (red) without profit/loss."""
+    """Exports trades to a styled XLS file matching the 10-column layout with True (green) and False (red)."""
     if not trades:
         return
 
@@ -951,8 +968,8 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
 <style>
   body { font-family: Calibri, sans-serif; font-size: 11pt; }
   table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-  th { background-color: #1f4e78; color: white; padding: 10px; border: 1px solid #b0c4de; text-align: center; font-size: 11pt; }
-  td { padding: 8px 12px; border: 1px solid #d3d3d3; text-align: center; }
+  th { background-color: #1f4e78; color: white; padding: 10px; border: 1px solid #b0c4de; text-align: center; font-size: 11pt; font-weight: bold; }
+  td { padding: 8px 12px; border: 1px solid #d3d3d3; text-align: center; font-size: 11pt; }
   tr:nth-child(even) { background-color: #f9f9f9; }
   .true-bg { background-color: #d4edda !important; color: #155724 !important; font-weight: bold; }
   .false-bg { background-color: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
@@ -960,44 +977,44 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
 </style>
 </head>
 <body>
-<div class="title">📊 Expiry Hero or Zero Strategy 1:3 Target Evaluation</div>
+<div class="title">📊 Expiry Hero or Zero Strategy - Backtest Results</div>
 <table>
   <thead>
     <tr>
-      <th>Expiry Date</th>
-      <th>Entry Time</th>
-      <th>Meet / Exit Time</th>
-      <th>Symbol</th>
-      <th>Strike Price</th>
-      <th>Entry Price (₹)</th>
-      <th>Target 1:3 (₹)</th>
-      <th>Exit Price (₹)</th>
-      <th>Quantity</th>
-      <th>1:3 Attained (True/False)</th>
-      <th>Exit Reason</th>
+      <th>epiry date</th>
+      <th>entry price</th>
+      <th>symbol</th>
+      <th>strike price</th>
+      <th>target 1:1</th>
+      <th>target 1:2</th>
+      <th>target1:3</th>
+      <th>Attained (True/False)</th>
+      <th>MARKET_CLOSE_Price</th>
+      <th>After entry  High</th>
     </tr>
   </thead>
   <tbody>
 """
     for t in trades:
-        is_true = str(t.get("result", "")).lower() == "true" or "target" in str(t.get("exit_reason", "")).lower()
-        res_str = "True" if is_true else "False"
-        row_cls = "true-bg" if is_true else "false-bg"
-        meet_t = t.get("meet_time") or t.get("exit_time", "")
-        tgt_val = t.get("target_price", 24.0) or 24.0
+        def cell_html(val: Any) -> str:
+            s_val = str(val).strip()
+            if s_val.lower() == "true":
+                return '<td class="true-bg">True</td>'
+            elif s_val.lower() == "false":
+                return '<td class="false-bg">False</td>'
+            return f'<td>{s_val}</td>'
 
         html_content += f"""    <tr>
-      <td>{t['expiry_date']}</td>
-      <td>{t['execution_time']}</td>
-      <td>{meet_t}</td>
-      <td>{t['symbol']}</td>
-      <td>{t['strike_price']}</td>
-      <td>₹{t['entry_price']:.2f}</td>
-      <td>₹{tgt_val:.2f}</td>
-      <td>₹{t['closing_price']:.2f}</td>
-      <td>{t['quantity']}</td>
-      <td class="{row_cls}">{res_str}</td>
-      <td>{t['exit_reason']}</td>
+      <td>{t.get('epiry date', t.get('expiry_date', ''))}</td>
+      <td>{t.get('entry price', t.get('entry_price', ''))}</td>
+      <td>{t.get('symbol', '')}</td>
+      <td>{t.get('strike price', t.get('strike_price', ''))}</td>
+      {cell_html(t.get('target 1:1', ''))}
+      {cell_html(t.get('target 1:2', ''))}
+      {cell_html(t.get('target1:3', ''))}
+      {cell_html(t.get('Attained (True/False)', ''))}
+      <td>{t.get('MARKET_CLOSE_Price', '')}</td>
+      <td>{t.get('After entry  High', '')}</td>
     </tr>\n"""
 
     html_content += """  </tbody>
@@ -1012,13 +1029,13 @@ def export_trades_excel(trades: List[Dict[str, Any]], output_file: str = "backte
 
 
 def print_summary_report(results: Dict[str, Any]):
-    """Prints a clear summary report with True/False evaluation (no profit/loss amounts)."""
+    """Prints a clear summary report with multi-ratio True/False evaluation matching the 10-column layout."""
     m = results["metrics"]
     c = results["config"]
     trades = results["trades"]
 
     print("\n==========================================================================================")
-    print(f"📊 1:3 TARGET EVALUATION SUMMARY ({c['symbol']} EXPIRY HERO-ZERO)")
+    print(f"📊 MULTI-RATIO TARGET EVALUATION SUMMARY ({c['symbol']} EXPIRY HERO-ZERO)")
     print("==========================================================================================")
     print(f"Dataset Total Days    : {c['total_days_evaluated']} Days ({c.get('expiry_days_evaluated', 0)} Expiry Days Evaluated)")
     print(f"Real Market Timing    : {c.get('market_open_time', '09:15')} to {c.get('market_close_time', '15:40')} IST (9:15 to 3:40)")
@@ -1028,35 +1045,44 @@ def print_summary_report(results: Dict[str, Any]):
     else:
         price_label = f"₹{c.get('min_entry_price', 0):.2f} to ₹{c.get('max_entry_price', 0):.2f} (Exact ₹{c.get('target_entry_price', 6.0):.2f} ± ₹{c.get('price_tolerance', 0.10):.2f})"
 
-    target_val = c.get('target_profit', 24.0) or 24.0
+    t_entry = c.get('target_entry_price', 6.0)
     print(f"Trigger Time Window   : {time_label}")
-    print(f"Target Condition      : 1:3 Target (Entry ₹{c.get('target_entry_price', 6.0):.2f} -> Target Price ₹{target_val:.2f})")
-    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off if 1:3 target not met)")
+    print(f"Target Ratios         : 1:1 (₹{t_entry*2:.2f}), 1:2 (₹{t_entry*3:.2f}), 1:3 (₹{t_entry*4:.2f})")
+    print(f"Market Close Exit     : {c['market_close_time']} IST (Square-off if target not met)")
     print(f"Entry Price Rule      : {price_label}")
     print(f"Lot Size & Quantity   : {c['lots']} Lot(s) ({c['lots'] * IndexConfig.get(c['symbol'])['lot_size']} Qty)")
     print("------------------------------------------------------------------------------------------")
     print(f"Total Trades Placed   : {m['total_trades']}")
-    print(f"1:3 Target Attained   : {m.get('true_count', 0)} (True)")
-    print(f"1:3 Not Attained      : {m.get('false_count', 0)} (False)")
-    print(f"1:3 Attainment Rate   : {m.get('win_rate_pct', 0.0)}%")
-    print(f"Overall Result        : {'True' if m.get('true_count', 0) > 0 else 'False'}")
+    print(f"Target 1:1 Attained   : {m.get('t1_true', 0)} / {m['total_trades']} ({m.get('t1_pct', 0.0)}%)")
+    print(f"Target 1:2 Attained   : {m.get('t2_true', 0)} / {m['total_trades']} ({m.get('t2_pct', 0.0)}%)")
+    print(f"Target 1:3 Attained   : {m.get('t3_true', 0)} / {m['total_trades']} ({m.get('t3_pct', 0.0)}%)")
+    print(f"Overall Attained      : {m.get('attained_true', 0)} / {m['total_trades']} ({m.get('attained_pct', 0.0)}%)")
+    print(f"Overall Result        : {'True' if m.get('attained_true', 0) > 0 else 'False'}")
     print("==========================================================================================\n")
 
     if trades:
-        print("Detailed Trade Breakdown:")
-        print(f"{'Expiry Date':<12} | {'Entry Time':<20} | {'Meet / Exit Time':<20} | {'Strike Price':<22} | {'Entry (₹)':<10} | {'Target 1:3':<12} | {'Exit (₹)':<10} | {'1:3 Attained (True/False)':<26}")
-        print("-" * 135)
+        print("Detailed Trade Breakdown (Exact 10-Column Spreadsheet Layout):")
+        headers = ["epiry date", "entry price", "symbol", "strike price", "target 1:1", "target 1:2", "target1:3", "Attained (True/False)", "MARKET_CLOSE_Price", "After entry  High"]
+        widths = [12, 12, 8, 20, 11, 11, 11, 23, 20, 18]
+        header_line = " | ".join(f"{h:<{w}}" for h, w in zip(headers, widths))
+        sep_line = "-" * len(header_line)
+        print(header_line)
+        print(sep_line)
         for t in trades:
-            entry_t = t.get("execution_time", "")
-            exit_t = t.get("meet_time") or t.get("exit_time", "")
-            is_true = t.get("is_target_attained", False) or str(t.get("result", "")).lower() == "true" or "target" in str(t.get("exit_reason", "")).lower()
-            res_label = "True" if is_true else "False"
-            print(
-                f"{t['expiry_date']:<12} | {entry_t:<20} | {exit_t:<20} | {t['strike_price']:<22} | "
-                f"{t['entry_price']:<10.2f} | {f'₹{target_val:.2f}':<12} | {t['closing_price']:<10.2f} | "
-                f"{res_label:<26}"
-            )
-        print("-" * 135)
+            row = [
+                str(t.get("epiry date", t.get("expiry_date", ""))),
+                str(t.get("entry price", t.get("entry_price", ""))),
+                str(t.get("symbol", "")),
+                str(t.get("strike price", t.get("strike_price", ""))),
+                str(t.get("target 1:1", "")),
+                str(t.get("target 1:2", "")),
+                str(t.get("target1:3", "")),
+                str(t.get("Attained (True/False)", "")),
+                str(t.get("MARKET_CLOSE_Price", "")),
+                str(t.get("After entry  High", ""))
+            ]
+            print(" | ".join(f"{val:<{w}}" for val, w in zip(row, widths)))
+        print(sep_line + "\n")
 
 
 def run_backtest(
@@ -1143,6 +1169,78 @@ def run_backtest(
     print(f"• Quantity Traded    : {lots} Lot(s) ({lots * IndexConfig.get(symbol)['lot_size']} Qty)")
     print(f"==========================================================================================\n")
 
+    # Pre-index day close quotes for every date and strike
+    day_close_quotes_by_date: Dict[str, Dict[str, float]] = {}
+    for d_str, day_c in structured_by_date.items():
+        day_close_quotes_by_date[d_str] = {}
+        for c in reversed(day_c):
+            for (sp, opt), ltp in c["strike_prices"].items():
+                k1 = f"{int(sp)}_{opt}"
+                k2 = f"{sp}_{opt}"
+                if k1 not in day_close_quotes_by_date[d_str]:
+                    day_close_quotes_by_date[d_str][k1] = ltp
+                    day_close_quotes_by_date[d_str][k2] = ltp
+
+    def create_trade_record(t_rec: Dict[str, Any], date_str: str, default_exit_time: str, last_day_spot: float) -> Dict[str, Any]:
+        pos_entry = float(t_rec.get("entry_price", target_entry_price))
+        after_entry_high = round(float(t_rec.get("max_high", pos_entry)), 2)
+
+        # Retrieve market close price from day_close_quotes_by_date
+        sp_key1 = f"{int(t_rec['strike'])}_{t_rec['option_type']}"
+        sp_key2 = f"{float(t_rec['strike'])}_{t_rec['option_type']}"
+        mkt_close = day_close_quotes_by_date.get(date_str, {}).get(sp_key1)
+        if mkt_close is None:
+            mkt_close = day_close_quotes_by_date.get(date_str, {}).get(sp_key2)
+        if mkt_close is None:
+            if t_rec["option_type"] == "CE":
+                mkt_close = max(0.05, last_day_spot - t_rec["strike"])
+            else:
+                mkt_close = max(0.05, t_rec["strike"] - last_day_spot)
+        mkt_close_price = round(float(mkt_close), 2)
+
+        # Target Ratios:
+        # 1:1 -> ₹12.00 (target_entry_price * 2)
+        # 1:2 -> ₹18.00 (target_entry_price * 3)
+        # 1:3 -> ₹24.00 (target_entry_price * 4)
+        t1_thresh = round(target_entry_price * 2.0, 2)
+        t2_thresh = round(target_entry_price * 3.0, 2)
+        t3_thresh = round(target_entry_price * 4.0, 2)
+
+        t_1_1 = "True" if after_entry_high >= t1_thresh else "False"
+        t_1_2 = "True" if after_entry_high >= t2_thresh else "False"
+        t_1_3 = "True" if after_entry_high >= t3_thresh else "False"
+        attained = "True" if after_entry_high >= t1_thresh else "False"
+
+        strike_label = f"{int(t_rec['strike'])} {t_rec['option_type']} ({t_rec.get('strike_type', 'ATM')})"
+        exit_reason = t_rec.get("exit_reason", "MARKET_CLOSE_TIME")
+
+        return {
+            # Exact 10 WPS spreadsheet columns matching user requirements:
+            "epiry date": date_str,
+            "entry price": f"{pos_entry:.2f}",
+            "symbol": t_rec.get("symbol", symbol),
+            "strike price": strike_label,
+            "target 1:1": t_1_1,
+            "target 1:2": t_1_2,
+            "target1:3": t_1_3,
+            "Attained (True/False)": attained,
+            "MARKET_CLOSE_Price": f"{mkt_close_price:.2f}",
+            "After entry  High": f"{after_entry_high:.2f}",
+            # Internal fields:
+            "expiry_date": date_str,
+            "execution_time": t_rec.get("timestamp", default_exit_time),
+            "exit_time": t_rec.get("exit_time", default_exit_time),
+            "meet_time": t_rec.get("meet_time", default_exit_time),
+            "strike": t_rec["strike"],
+            "option_type": t_rec["option_type"],
+            "strike_type": t_rec.get("strike_type", "ATM"),
+            "raw_entry_price": pos_entry,
+            "raw_after_entry_high": after_entry_high,
+            "raw_market_close": mkt_close_price,
+            "exit_reason": exit_reason,
+            "is_target_attained": attained == "True"
+        }
+
     for current_date_str in all_dates:
         is_expiry = current_date_str in expiry_dates
         exp_date_obj = datetime.strptime(current_date_str, "%Y-%m-%d").date()
@@ -1154,6 +1252,7 @@ def run_backtest(
 
         day_candles = structured_by_date[current_date_str]
         num_candles = len(day_candles)
+        last_day_spot = day_candles[-1]["spot_price"] if day_candles else 0.0
 
         for candle_idx, candle in enumerate(day_candles):
             dt = candle["datetime"]
@@ -1204,23 +1303,7 @@ def run_backtest(
                 )
 
                 for t in exited_records:
-                    is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 24.0))
-                    res_str = "True" if is_target_attained else "False"
-                    trade_item = {
-                        "expiry_date": current_date_str,
-                        "execution_time": t.get("timestamp", dt.strftime("%Y-%m-%d %H:%M:%S")),
-                        "exit_time": t.get("exit_time", dt.strftime("%Y-%m-%d %H:%M:%S")),
-                        "meet_time": t.get("meet_time", dt.strftime("%Y-%m-%d %H:%M:%S")),
-                        "symbol": t.get("symbol", symbol),
-                        "strike_price": f"{int(t['strike'])} {t['option_type']} ({t.get('strike_type', 'ATM')})",
-                        "entry_price": t.get("entry_price", 0.0),
-                        "target_price": strategy.target_profit or 24.0,
-                        "closing_price": t.get("exit_price", 0.0),
-                        "quantity": t.get("quantity", IndexConfig.get(symbol)["lot_size"]),
-                        "result": res_str,
-                        "is_target_attained": is_target_attained,
-                        "exit_reason": t.get("exit_reason", "MARKET_CLOSE_TIME")
-                    }
+                    trade_item = create_trade_record(t, current_date_str, dt.strftime("%Y-%m-%d %H:%M:%S"), last_day_spot)
                     all_trades.append(trade_item)
 
             # End day processing once market close time reached or on final candle
@@ -1236,23 +1319,8 @@ def run_backtest(
                         force_market_close=True
                     )
                     for t in force_exits:
-                        is_target_attained = "TARGET" in str(t.get("exit_reason", "")) or (t.get("exit_price", 0.0) >= (strategy.target_profit or 24.0))
-                        res_str = "True" if is_target_attained else "False"
-                        all_trades.append({
-                            "expiry_date": current_date_str,
-                            "execution_time": t.get("timestamp", dt.strftime("%Y-%m-%d %H:%M:%S")),
-                            "exit_time": t.get("exit_time", close_dt.strftime("%Y-%m-%d %H:%M:%S")),
-                            "meet_time": t.get("meet_time", close_dt.strftime("%Y-%m-%d %H:%M:%S")),
-                            "symbol": t.get("symbol", symbol),
-                            "strike_price": f"{int(t['strike'])} {t['option_type']} ({t.get('strike_type', 'ATM')})",
-                            "entry_price": t.get("entry_price", 0.0),
-                            "target_price": strategy.target_profit or 24.0,
-                            "closing_price": t.get("exit_price", 0.0),
-                            "quantity": t.get("quantity", IndexConfig.get(symbol)["lot_size"]),
-                            "result": res_str,
-                            "is_target_attained": is_target_attained,
-                            "exit_reason": t.get("exit_reason", "MARKET_CLOSE_TIME")
-                        })
+                        trade_item = create_trade_record(t, current_date_str, close_dt.strftime("%Y-%m-%d %H:%M:%S"), last_day_spot)
+                        all_trades.append(trade_item)
                 break
 
             # 2. Evaluate Entry if no active trade today and within trigger window
@@ -1367,19 +1435,23 @@ if __name__ == "__main__":
                 comp_results.append((label, sm, res))
                 results_by_sm[sm] = res
 
-            print("\n" + "=" * 105)
-            print("📊 COMPARATIVE 1:3 TARGET SUMMARY: ATM vs OTM vs ITM vs ALL")
-            print("=" * 105)
-            print(f"{'Configuration':<24} | {'Trades':<8} | {'1:3 Attained (True)':<20} | {'Not Attained (False)':<20} | {'1:3 Rate':<10} | {'Result':<8}")
-            print("-" * 105)
+            print("\n" + "=" * 125)
+            print("📊 COMPARATIVE MULTI-RATIO TARGET SUMMARY: ATM vs OTM vs ITM vs ALL")
+            print("=" * 125)
+            print(f"{'Configuration':<24} | {'Trades':<8} | {'Target 1:1':<18} | {'Target 1:2':<18} | {'Target 1:3':<18} | {'Overall Attained':<18} | {'Result':<8}")
+            print("-" * 125)
             for label, sm, res in comp_results:
                 m = res["metrics"]
-                overall_res = "True" if m.get("true_count", 0) > 0 else "False"
+                tot = m['total_trades']
+                t1_s = f"{m.get('t1_true', 0)}/{tot} ({m.get('t1_pct', 0.0)}%)" if tot > 0 else "0/0 (0.0%)"
+                t2_s = f"{m.get('t2_true', 0)}/{tot} ({m.get('t2_pct', 0.0)}%)" if tot > 0 else "0/0 (0.0%)"
+                t3_s = f"{m.get('t3_true', 0)}/{tot} ({m.get('t3_pct', 0.0)}%)" if tot > 0 else "0/0 (0.0%)"
+                att_s = f"{m.get('attained_true', 0)}/{tot} ({m.get('attained_pct', 0.0)}%)" if tot > 0 else "0/0 (0.0%)"
+                overall_res = "True" if m.get("attained_true", 0) > 0 else "False"
                 print(
-                    f"{label:<24} | {m['total_trades']:<8} | {m.get('true_count', 0):<20} | {m.get('false_count', 0):<20} | "
-                    f"{m['win_rate_pct']:<9.1f}% | {overall_res:<8}"
+                    f"{label:<24} | {tot:<8} | {t1_s:<18} | {t2_s:<18} | {t3_s:<18} | {att_s:<18} | {overall_res:<8}"
                 )
-            print("=" * 105 + "\n")
+            print("=" * 125 + "\n")
 
             # Extract evaluated expiry dates across results
             all_exp_dates = []
@@ -1393,11 +1465,11 @@ if __name__ == "__main__":
             calendar_expiries = get_expiry_days(list(structured.keys()), symbol=detected_sym, mode=args.expiry_mode)
             sorted_exp_dates = sorted(list(set(all_exp_dates + calendar_expiries)))
 
-            print("=" * 85)
-            print("📅 EXPIRY DATE-BY-DATE 1:3 TARGET ATTAINMENT (True / False)")
-            print("=" * 85)
-            print(f"{'Expiry Date':<12} | {'ATM':<12} | {'OTM':<12} | {'ITM':<12} | {'ANY Strike':<14}")
-            print("-" * 85)
+            print("=" * 95)
+            print("📅 EXPIRY DATE-BY-DATE TARGET ATTAINMENT (1:1 / 1:2 / 1:3 Status)")
+            print("=" * 95)
+            print(f"{'Expiry Date':<12} | {'ATM (1:1/1:2/1:3)':<20} | {'OTM (1:1/1:2/1:3)':<20} | {'ITM (1:1/1:2/1:3)':<20} | {'ANY Attained':<14}")
+            print("-" * 95)
 
             atm_true_days = 0
             otm_true_days = 0
@@ -1405,28 +1477,41 @@ if __name__ == "__main__":
             any_true_days = 0
             total_days = len(sorted_exp_dates)
 
+            def format_day_status(trades_list: List[Dict[str, Any]]) -> str:
+                if not trades_list:
+                    return "No Trade"
+                t1 = any(str(t.get('target 1:1', '')).lower() == 'true' for t in trades_list)
+                t2 = any(str(t.get('target 1:2', '')).lower() == 'true' for t in trades_list)
+                t3 = any(str(t.get('target1:3', '')).lower() == 'true' for t in trades_list)
+                def sym(b: bool) -> str: return "T" if b else "F"
+                return f"{sym(t1)} / {sym(t2)} / {sym(t3)}"
+
             for d in sorted_exp_dates:
                 atm_trades = [t for t in results_by_sm.get('atm_only', {}).get('trades', []) if t['expiry_date'] == d]
                 otm_trades = [t for t in results_by_sm.get('otm1_only', {}).get('trades', []) if t['expiry_date'] == d]
                 itm_trades = [t for t in results_by_sm.get('itm1_only', {}).get('trades', []) if t['expiry_date'] == d]
 
-                atm_true = any(t.get('is_target_attained', False) or 'TARGET' in str(t.get('exit_reason', '')) for t in atm_trades)
-                otm_true = any(t.get('is_target_attained', False) or 'TARGET' in str(t.get('exit_reason', '')) for t in otm_trades)
-                itm_true = any(t.get('is_target_attained', False) or 'TARGET' in str(t.get('exit_reason', '')) for t in itm_trades)
-                any_true = atm_true or otm_true or itm_true
+                atm_status = format_day_status(atm_trades)
+                otm_status = format_day_status(otm_trades)
+                itm_status = format_day_status(itm_trades)
 
-                if atm_true: atm_true_days += 1
-                if otm_true: otm_true_days += 1
-                if itm_true: itm_true_days += 1
-                if any_true: any_true_days += 1
+                atm_att = any(str(t.get('Attained (True/False)', '')).lower() == 'true' for t in atm_trades)
+                otm_att = any(str(t.get('Attained (True/False)', '')).lower() == 'true' for t in otm_trades)
+                itm_att = any(str(t.get('Attained (True/False)', '')).lower() == 'true' for t in itm_trades)
+                any_att = atm_att or otm_att or itm_att
 
-                print(f"{d:<12} | {str(atm_true):<12} | {str(otm_true):<12} | {str(itm_true):<12} | {str(any_true):<14}")
+                if atm_att: atm_true_days += 1
+                if otm_att: otm_true_days += 1
+                if itm_att: itm_true_days += 1
+                if any_att: any_true_days += 1
 
-            print("-" * 85)
-            print(f"{'TOTAL TRUE':<12} | {f'{atm_true_days} / {total_days}':<12} | {f'{otm_true_days} / {total_days}':<12} | {f'{itm_true_days} / {total_days}':<12} | {f'{any_true_days} / {total_days}':<14}")
+                print(f"{d:<12} | {atm_status:<20} | {otm_status:<20} | {itm_status:<20} | {str(any_att):<14}")
+
+            print("-" * 95)
+            print(f"{'DAYS ATTAINED':<12} | {f'{atm_true_days} / {total_days}':<20} | {f'{otm_true_days} / {total_days}':<20} | {f'{itm_true_days} / {total_days}':<20} | {f'{any_true_days} / {total_days}':<14}")
             any_pct = (any_true_days / total_days * 100) if total_days > 0 else 0.0
-            print(f"{'SUCCESS RATE':<12} | {f'{atm_true_days/total_days*100:.1f}%':<12} | {f'{otm_true_days/total_days*100:.1f}%':<12} | {f'{itm_true_days/total_days*100:.1f}%':<12} | {f'{any_pct:.1f}%':<14}")
-            print("=" * 85 + "\n")
+            print(f"{'SUCCESS RATE':<12} | {f'{atm_true_days/total_days*100:.1f}%':<20} | {f'{otm_true_days/total_days*100:.1f}%':<20} | {f'{itm_true_days/total_days*100:.1f}%':<20} | {f'{any_pct:.1f}%':<14}")
+            print("=" * 95 + "\n")
         else:
             if args.otm_only:
                 chosen_strike_mode = "otm1_only"

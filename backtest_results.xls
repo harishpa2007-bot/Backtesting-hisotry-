@@ -5,8 +5,8 @@
 <style>
   body { font-family: Calibri, sans-serif; font-size: 11pt; }
   table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-  th { background-color: #1f4e78; color: white; padding: 10px; border: 1px solid #b0c4de; text-align: center; font-size: 11pt; }
-  td { padding: 8px 12px; border: 1px solid #d3d3d3; text-align: center; }
+  th { background-color: #1f4e78; color: white; padding: 10px; border: 1px solid #b0c4de; text-align: center; font-size: 11pt; font-weight: bold; }
+  td { padding: 8px 12px; border: 1px solid #d3d3d3; text-align: center; font-size: 11pt; }
   tr:nth-child(even) { background-color: #f9f9f9; }
   .true-bg { background-color: #d4edda !important; color: #155724 !important; font-weight: bold; }
   .false-bg { background-color: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
@@ -14,205 +14,190 @@
 </style>
 </head>
 <body>
-<div class="title">📊 Expiry Hero or Zero Strategy 1:3 Target Evaluation</div>
+<div class="title">📊 Expiry Hero or Zero Strategy - Backtest Results</div>
 <table>
   <thead>
     <tr>
-      <th>Expiry Date</th>
-      <th>Entry Time</th>
-      <th>Meet / Exit Time</th>
-      <th>Symbol</th>
-      <th>Strike Price</th>
-      <th>Entry Price (₹)</th>
-      <th>Target 1:3 (₹)</th>
-      <th>Exit Price (₹)</th>
-      <th>Quantity</th>
-      <th>1:3 Attained (True/False)</th>
-      <th>Exit Reason</th>
+      <th>epiry date</th>
+      <th>entry price</th>
+      <th>symbol</th>
+      <th>strike price</th>
+      <th>target 1:1</th>
+      <th>target 1:2</th>
+      <th>target1:3</th>
+      <th>Attained (True/False)</th>
+      <th>MARKET_CLOSE_Price</th>
+      <th>After entry  High</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>2026-08-04</td>
-      <td>2026-08-04 15:23:00</td>
-      <td>2026-08-04 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>24400 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td>3.30</td>
+      <td>8.60</td>
     </tr>
     <tr>
       <td>2026-08-11</td>
-      <td>2026-08-11 15:16:00</td>
-      <td>2026-08-11 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>24500 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
+      <td class="true-bg">True</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>16.65</td>
     </tr>
     <tr>
       <td>2026-08-18</td>
-      <td>2026-08-18 15:25:00</td>
-      <td>2026-08-18 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>24200 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td>0.05</td>
+      <td>8.85</td>
     </tr>
     <tr>
       <td>2026-08-25</td>
-      <td>2026-08-25 15:15:00</td>
-      <td>2026-08-25 15:21:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>24300 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹24.00</td>
-      <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_24_REACHED</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td>34.50</td>
+      <td>38.90</td>
     </tr>
     <tr>
       <td>2026-08-25</td>
-      <td>2026-08-25 15:15:00</td>
-      <td>2026-08-25 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>24200 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td>0.50</td>
+      <td>6.00</td>
     </tr>
     <tr>
       <td>2026-09-01</td>
-      <td>2026-09-01 15:20:00</td>
-      <td>2026-09-01 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>23950 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>18.20</td>
     </tr>
     <tr>
       <td>2026-09-08</td>
-      <td>2026-09-08 15:15:00</td>
-      <td>2026-09-08 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>23700 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
+      <td class="true-bg">True</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>17.25</td>
     </tr>
     <tr>
       <td>2026-09-15</td>
-      <td>2026-09-15 15:20:00</td>
-      <td>2026-09-15 15:21:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>23100 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹24.00</td>
-      <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_24_REACHED</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>28.15</td>
     </tr>
     <tr>
       <td>2026-09-15</td>
-      <td>2026-09-15 15:20:00</td>
-      <td>2026-09-15 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>23200 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
-      <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>60.15</td>
     </tr>
     <tr>
       <td>2026-09-22</td>
-      <td>2026-09-22 15:16:00</td>
-      <td>2026-09-22 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>23300 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
+      <td class="true-bg">True</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>17.80</td>
     </tr>
     <tr>
       <td>2026-09-29</td>
-      <td>2026-09-29 15:18:00</td>
-      <td>2026-09-29 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td>0.05</td>
+      <td>7.45</td>
     </tr>
     <tr>
       <td>2026-10-06</td>
-      <td>2026-10-06 15:19:00</td>
-      <td>2026-10-06 15:29:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹24.00</td>
-      <td>65</td>
       <td class="true-bg">True</td>
-      <td>TARGET_24_REACHED</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
+      <td>26.05</td>
+      <td>26.15</td>
     </tr>
     <tr>
       <td>2026-10-13</td>
-      <td>2026-10-13 15:15:00</td>
-      <td>2026-10-13 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>22750 CE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
+      <td class="true-bg">True</td>
+      <td class="true-bg">True</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="true-bg">True</td>
+      <td>0.05</td>
+      <td>19.95</td>
     </tr>
     <tr>
       <td>2026-10-13</td>
-      <td>2026-10-13 15:15:00</td>
-      <td>2026-10-13 15:40:00</td>
+      <td>6.00</td>
       <td>NIFTY</td>
       <td>22650 PE (OTM1)</td>
-      <td>₹6.00</td>
-      <td>₹24.00</td>
-      <td>₹0.05</td>
-      <td>65</td>
       <td class="false-bg">False</td>
-      <td>MARKET_CLOSE_TIME</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td class="false-bg">False</td>
+      <td>0.05</td>
+      <td>6.60</td>
     </tr>
   </tbody>
 </table>
