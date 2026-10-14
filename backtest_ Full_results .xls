@@ -1,0 +1,1315 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="ProgId" content="Excel.Sheet">
+  <meta name="Generator" content="WPS Office ET">
+  <!--[if gte mso 9]>
+   <xml>
+    <o:DocumentProperties>
+     <o:Created>2026-10-14T18:27:19</o:Created>
+     <o:LastAuthor>shiek</o:LastAuthor>
+     <o:LastSaved>2026-10-14T18:28:09</o:LastSaved>
+    </o:DocumentProperties>
+    <o:CustomDocumentProperties>
+     <o:ICV dt:dt="string">93B1DCC16E34037E3C7CCF6AA873062C_42</o:ICV>
+     <o:KSOProductBuildVer dt:dt="string">1033-12.1.28496.28496</o:KSOProductBuildVer>
+     <o:CalculationRule dt:dt="float">0.0</o:CalculationRule>
+    </o:CustomDocumentProperties>
+   </xml>
+  <![endif]-->
+  <style>
+<!-- @page
+	{margin:1.00in 0.75in 1.00in 0.75in;
+	mso-header-margin:0.50in;
+	mso-footer-margin:0.50in;}
+tr
+	{mso-height-source:auto;
+	mso-ruby-visibility:none;}
+col
+	{mso-width-source:auto;
+	mso-ruby-visibility:none;}
+br
+	{mso-data-placement:same-cell;}
+.font0
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font1
+	{color:#1F4E78;
+	font-size:16.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Arial";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font2
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Arial";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font3
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Arial";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font4
+	{color:#155724;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Arial";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font5
+	{color:#721C24;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Arial";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font6
+	{color:#0000FF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font7
+	{color:#800080;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font8
+	{color:#FF0000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font9
+	{color:#44546A;
+	font-size:18.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font10
+	{color:#7F7F7F;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:italic;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font11
+	{color:#44546A;
+	font-size:15.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font12
+	{color:#44546A;
+	font-size:13.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font13
+	{color:#44546A;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font14
+	{color:#3F3F76;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font15
+	{color:#3F3F3F;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font16
+	{color:#FA7D00;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font17
+	{color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font18
+	{color:#FA7D00;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font19
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font20
+	{color:#006100;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font21
+	{color:#9C0006;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font22
+	{color:#9C6500;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font23
+	{color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.font24
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:"Calibri";
+	mso-generic-font-family:auto;
+	mso-font-charset:0;}
+.style0
+	{mso-number-format:"General";
+	text-align:general;
+	vertical-align:middle;
+	white-space:nowrap;
+	mso-rotate:0;
+	mso-pattern:auto;
+	mso-background-source:auto;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	border:none;
+	mso-protection:locked visible;
+	mso-style-name:"Normal";
+	mso-style-id:0;}
+.style16
+	{mso-number-format:"_ * \#\,\#\#0\.00_ \;_ * \\-\#\,\#\#0\.00_ \;_ * \0022-\0022??_ \;_ \@_ ";
+	mso-style-name:"Comma";
+	mso-style-id:3;}
+.style17
+	{mso-number-format:"_\(\\$* \#\,\#\#0\.00_\)\;_\(\\$* \\\(\#\,\#\#0\.00\\\)\;_\(\\$* \0022-\0022??_\)\;_\(\@_\)";
+	mso-style-name:"Currency";
+	mso-style-id:4;}
+.style18
+	{mso-number-format:"0%";
+	mso-style-name:"Percent";
+	mso-style-id:5;}
+.style19
+	{mso-number-format:"_ * \#\,\#\#0_ \;_ * \\-\#\,\#\#0_ \;_ * \0022-\0022_ \;_ \@_ ";
+	mso-style-name:"Comma [0]";
+	mso-style-id:6;}
+.style20
+	{mso-number-format:"_\(\\$* \#\,\#\#0_\)\;_\(\\$* \\\(\#\,\#\#0\\\)\;_\(\\$* \0022-\0022_\)\;_\(\@_\)";
+	mso-style-name:"Currency [0]";
+	mso-style-id:7;}
+.style21
+	{color:#0000FF;
+	font-size:11.0pt;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:Calibri;
+	mso-style-name:"Link";
+	mso-style-id:8;}
+.style22
+	{color:#800080;
+	font-size:11.0pt;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:Calibri;
+	mso-style-name:"Followed Hyperlink";
+	mso-style-id:9;}
+.style23
+	{mso-pattern:auto none;
+	background:#FFFFCC;
+	border:.5pt solid #B2B2B2;
+	mso-style-name:"Note";}
+.style24
+	{color:#FF0000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Warning Text";}
+.style25
+	{color:#44546A;
+	font-size:18.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-style-name:"Title";}
+.style26
+	{color:#7F7F7F;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:italic;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Explanatory Text";}
+.style27
+	{color:#44546A;
+	font-size:15.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	border-bottom:1.0pt solid #5B9BD5;
+	mso-style-name:"Heading 1";}
+.style28
+	{color:#44546A;
+	font-size:13.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	border-bottom:1.0pt solid #5B9BD5;
+	mso-style-name:"Heading 2";}
+.style29
+	{color:#44546A;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	border-bottom:1.0pt solid #ACCCEA;
+	mso-style-name:"Heading 3";}
+.style30
+	{color:#44546A;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-style-name:"Heading 4";}
+.style31
+	{mso-pattern:auto none;
+	background:#FFCC99;
+	color:#3F3F76;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:.5pt solid #7F7F7F;
+	mso-style-name:"Input";}
+.style32
+	{mso-pattern:auto none;
+	background:#F2F2F2;
+	color:#3F3F3F;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:.5pt solid #3F3F3F;
+	mso-style-name:"Output";}
+.style33
+	{mso-pattern:auto none;
+	background:#F2F2F2;
+	color:#FA7D00;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:.5pt solid #7F7F7F;
+	mso-style-name:"Calculation";}
+.style34
+	{mso-pattern:auto none;
+	background:#A5A5A5;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:2.0pt double #3F3F3F;
+	mso-style-name:"Check Cell";}
+.style35
+	{color:#FA7D00;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border-bottom:2.0pt double #FF8001;
+	mso-style-name:"Linked Cell";}
+.style36
+	{color:#000000;
+	font-size:11.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border-top:.5pt solid #5B9BD5;
+	border-bottom:2.0pt double #5B9BD5;
+	mso-style-name:"Total";}
+.style37
+	{mso-pattern:auto none;
+	background:#C6EFCE;
+	color:#006100;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Good";}
+.style38
+	{mso-pattern:auto none;
+	background:#FFC7CE;
+	color:#9C0006;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Bad";}
+.style39
+	{mso-pattern:auto none;
+	background:#FFEB9C;
+	color:#9C6500;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Neutral";}
+.style40
+	{mso-pattern:auto none;
+	background:#5B9BD5;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent1";}
+.style41
+	{mso-pattern:auto none;
+	background:#DDEBF7;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent1";}
+.style42
+	{mso-pattern:auto none;
+	background:#BDD7EE;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent1";}
+.style43
+	{mso-pattern:auto none;
+	background:#9BC2E6;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent1";}
+.style44
+	{mso-pattern:auto none;
+	background:#ED7D31;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent2";}
+.style45
+	{mso-pattern:auto none;
+	background:#FCE4D6;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent2";}
+.style46
+	{mso-pattern:auto none;
+	background:#F8CBAD;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent2";}
+.style47
+	{mso-pattern:auto none;
+	background:#F4B084;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent2";}
+.style48
+	{mso-pattern:auto none;
+	background:#A5A5A5;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent3";}
+.style49
+	{mso-pattern:auto none;
+	background:#EDEDED;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent3";}
+.style50
+	{mso-pattern:auto none;
+	background:#DBDBDB;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent3";}
+.style51
+	{mso-pattern:auto none;
+	background:#C9C9C9;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent3";}
+.style52
+	{mso-pattern:auto none;
+	background:#FFC000;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent4";}
+.style53
+	{mso-pattern:auto none;
+	background:#FFF2CC;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent4";}
+.style54
+	{mso-pattern:auto none;
+	background:#FFE699;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent4";}
+.style55
+	{mso-pattern:auto none;
+	background:#FFD966;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent4";}
+.style56
+	{mso-pattern:auto none;
+	background:#4472C4;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent5";}
+.style57
+	{mso-pattern:auto none;
+	background:#D9E1F2;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent5";}
+.style58
+	{mso-pattern:auto none;
+	background:#B4C6E7;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent5";}
+.style59
+	{mso-pattern:auto none;
+	background:#8EA9DB;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent5";}
+.style60
+	{mso-pattern:auto none;
+	background:#70AD47;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"Accent6";}
+.style61
+	{mso-pattern:auto none;
+	background:#E2EFDA;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"20% - Accent6";}
+.style62
+	{mso-pattern:auto none;
+	background:#C6E0B4;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"40% - Accent6";}
+.style63
+	{mso-pattern:auto none;
+	background:#A9D08E;
+	color:#FFFFFF;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-style-name:"60% - Accent6";}
+td
+	{mso-style-parent:style0;
+	padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	mso-number-format:"General";
+	text-align:general;
+	vertical-align:middle;
+	white-space:nowrap;
+	mso-rotate:0;
+	mso-pattern:auto;
+	mso-background-source:auto;
+	color:#000000;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	border:none;
+	mso-protection:locked visible;}
+.xl65
+	{mso-style-parent:style0;
+	mso-font-charset:134;}
+.xl66
+	{mso-style-parent:style0;
+	color:#1F4E78;
+	font-size:16.0pt;
+	font-weight:700;
+	font-family:Arial;
+	mso-font-charset:134;}
+.xl67
+	{mso-style-parent:style0;
+	text-align:center;
+	white-space:normal;
+	font-weight:700;
+	font-family:Arial;
+	mso-font-charset:134;
+	border:1.0pt solid #D3D3D3;}
+.xl68
+	{mso-style-parent:style0;
+	mso-number-format:"m/d/yyyy";
+	text-align:center;
+	white-space:normal;
+	font-family:Arial;
+	mso-font-charset:134;
+	border:1.0pt solid #D3D3D3;}
+.xl69
+	{mso-style-parent:style0;
+	text-align:center;
+	white-space:normal;
+	font-family:Arial;
+	mso-font-charset:134;
+	border:1.0pt solid #D3D3D3;}
+.xl70
+	{mso-style-parent:style0;
+	text-align:center;
+	white-space:normal;
+	mso-pattern:auto none;
+	background:#D4EDDA;
+	color:#155724;
+	font-weight:700;
+	font-family:Arial;
+	mso-font-charset:134;
+	border:1.0pt solid #D3D3D3;}
+.xl71
+	{mso-style-parent:style0;
+	text-align:center;
+	white-space:normal;
+	mso-pattern:auto none;
+	background:#F8D7DA;
+	color:#721C24;
+	font-weight:700;
+	font-family:Arial;
+	mso-font-charset:134;
+	border:1.0pt solid #D3D3D3;}
+ -->  </style>
+  <!--[if gte mso 9]>
+   <xml>
+    <x:ExcelWorkbook>
+     <x:ExcelWorksheets>
+      <x:ExcelWorksheet>
+       <x:Name>backtest_results</x:Name>
+       <x:WorksheetOptions>
+        <x:DefaultRowHeight>336</x:DefaultRowHeight>
+        <x:Selected/>
+        <x:Panes>
+         <x:Pane>
+          <x:Number>3</x:Number>
+          <x:ActiveCol>0</x:ActiveCol>
+          <x:ActiveRow>0</x:ActiveRow>
+         </x:Pane>
+        </x:Panes>
+        <x:DoNotDisplayGridlines/>
+        <x:ProtectContents>False</x:ProtectContents>
+        <x:ProtectObjects>False</x:ProtectObjects>
+        <x:ProtectScenarios>False</x:ProtectScenarios>
+        <x:Print>
+         <x:PaperSizeIndex>9</x:PaperSizeIndex>
+        </x:Print>
+       </x:WorksheetOptions>
+      </x:ExcelWorksheet>
+     </x:ExcelWorksheets>
+     <x:ProtectStructure>False</x:ProtectStructure>
+     <x:ProtectWindows>False</x:ProtectWindows>
+     <x:WindowHeight>13920</x:WindowHeight>
+     <x:WindowWidth>29400</x:WindowWidth>
+    </x:ExcelWorkbook>
+   </xml>
+  <![endif]-->
+ </head>
+ <body link="blue" vlink="purple" class="xl65">
+  <table width="1389.75" border="0" cellpadding="0" cellspacing="0" style='width:1389.75pt;border-collapse:collapse;table-layout:fixed;'>
+   <col width="117" class="xl65" style='mso-width-source:userset;mso-width-alt:4436;'/>
+   <col width="107.25" class="xl65" style='mso-width-source:userset;mso-width-alt:4066;'/>
+   <col width="78" class="xl65" style='mso-width-source:userset;mso-width-alt:2957;'/>
+   <col width="183.75" class="xl65" style='mso-width-source:userset;mso-width-alt:6967;'/>
+   <col width="99.75" span="2" class="xl65" style='mso-width-source:userset;mso-width-alt:3782;'/>
+   <col width="94.50" class="xl65" style='mso-width-source:userset;mso-width-alt:3583;'/>
+   <col width="210.75" class="xl65" style='mso-width-source:userset;mso-width-alt:7991;'/>
+   <col width="241.50" class="xl65" style='mso-width-source:userset;mso-width-alt:9157;'/>
+   <col width="157.50" class="xl65" style='mso-width-source:userset;mso-width-alt:5972;'/>
+   <col width="57.60" span="246" class="xl65" style='mso-width-source:userset;mso-width-alt:2184;'/>
+   <tr height="23.95" style='height:23.95pt;'>
+    <td class="xl66" height="23.95" width="486" colspan="4" style='height:23.95pt;width:486.00pt;mso-ignore:colspan;' x:str>📊 Expiry Hero or Zero Strategy - Backtest Results</td>
+    <td class="xl65" width="99.75" style='width:99.75pt;'></td>
+    <td class="xl65" width="99.75" style='width:99.75pt;'></td>
+    <td class="xl65" width="94.50" style='width:94.50pt;'></td>
+    <td class="xl65" width="210.75" style='width:210.75pt;'></td>
+    <td class="xl65" width="241.50" style='width:241.50pt;'></td>
+    <td class="xl65" width="157.50" style='width:157.50pt;'></td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl67" height="17.75" style='height:17.75pt;' x:str>epiry date</td>
+    <td class="xl67" x:str>entry price</td>
+    <td class="xl67" x:str>symbol</td>
+    <td class="xl67" x:str>strike price</td>
+    <td class="xl67" x:str>target 1:1</td>
+    <td class="xl67" x:str>target 1:2</td>
+    <td class="xl67" x:str>target1:3</td>
+    <td class="xl67" x:str>Attained (True/False)</td>
+    <td class="xl67" x:str>MARKET_CLOSE_Price</td>
+    <td class="xl67" x:str>After entry High</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46238">8/4/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24450 PE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>7.35</td>
+    <td class="xl69" x:num>12.3</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46245">8/11/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24450 PE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>13.6</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46252">8/18/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24150 PE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>25.1</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46259">8/25/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24250 PE (ATM)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>10.1</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46266">9/1/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24000 PE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>35.5</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46273">9/8/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23650 CE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>32.75</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46280">9/15/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23150 CE (ATM)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>11.25</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46287">9/22/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23350 CE (ATM)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>11.8</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46294">9/29/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22700 CE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>16.2</td>
+    <td class="xl69" x:num>17.2</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46301">10/6/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22700 PE (ATM)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>13.3</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46308">10/13/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22700 PE (ATM)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>10.65</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46238">8/4/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24400 PE (OTM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>3.3</td>
+    <td class="xl69" x:num>8.6</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46245">8/11/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24500 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>16.65</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46252">8/18/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24200 CE (OTM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>8.85</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46259">8/25/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24300 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>34.5</td>
+    <td class="xl69" x:num>38.9</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46259">8/25/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24200 PE (OTM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.5</td>
+    <td class="xl69" x:num>6</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46266">9/1/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23950 PE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>18.2</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46273">9/8/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23700 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>17.25</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46280">9/15/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23100 PE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>28.15</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46280">9/15/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23200 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>60.15</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46287">9/22/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23300 PE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>17.8</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46294">9/29/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22750 CE (OTM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>7.45</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46301">10/6/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22750 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>26.05</td>
+    <td class="xl69" x:num>26.15</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46308">10/13/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22750 CE (OTM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>19.95</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46308">10/13/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22650 PE (OTM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>6.6</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46259">8/25/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24300 PE (ITM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>16.55</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46266">9/1/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>24050 PE (ITM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>14.25</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46273">9/8/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>23600 CE (ITM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>35.05</td>
+    <td class="xl69" x:num>77.6</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46294">9/29/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22650 CE (ITM1)</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl70" x:bool="TRUE">TRUE</td>
+    <td class="xl69" x:num>66</td>
+    <td class="xl69" x:num>31.4</td>
+   </tr>
+   <tr height="17.75" style='height:17.75pt;'>
+    <td class="xl68" height="17.75" style='height:17.75pt;' x:num="46301">10/6/2026</td>
+    <td class="xl69" x:num>6</td>
+    <td class="xl69" x:str>NIFTY</td>
+    <td class="xl69" x:str>22750 PE (ITM1)</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl71" x:bool="FALSE">FALSE</td>
+    <td class="xl69" x:num>0.05</td>
+    <td class="xl69" x:num>11.05</td>
+   </tr>
+   <![if supportMisalignedColumns]>
+    <tr width="0" style='display:none;'>
+     <td width="117" style='width:117;'></td>
+     <td width="107" style='width:107;'></td>
+     <td width="78" style='width:78;'></td>
+     <td width="184" style='width:184;'></td>
+     <td width="100" style='width:100;'></td>
+     <td width="95" style='width:95;'></td>
+     <td width="211" style='width:211;'></td>
+     <td width="242" style='width:242;'></td>
+     <td width="158" style='width:158;'></td>
+     <td width="58" style='width:58;'></td>
+    </tr>
+   <![endif]>
+  </table>
+ </body>
+</html>
